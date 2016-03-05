@@ -68,12 +68,12 @@
 (require 'auto-complete)
 (global-auto-complete-mode t)
 
+;; Load solarized theme
 (load-theme 'solarized-dark t)
 
 (unless (display-graphic-p)
   (solarized-with-color-variables 'dark
   (custom-theme-set-faces 'solarized-dark
-    `(clojure-keyword-face ((t (:foreground ,red))))
     `(default ((,class (:foreground ,base0 :background ,nil)))))))
 
 ;; Function for swapping buffers
