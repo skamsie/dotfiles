@@ -62,12 +62,12 @@
     ;; colorful parenthesis matching
     rainbow-delimiters))
 
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-
 ;; Install packages if not already there
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; Enhances M-x to allow easier execution of commands. Provides
 ;; a filterable list of possible commands in the minibuffer
