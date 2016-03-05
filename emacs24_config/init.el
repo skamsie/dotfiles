@@ -26,7 +26,6 @@
 ;; Go straight to scratch buffer on startup
 (setq inhibit-startup-message t)
 
-
 ;; Add repos
 (require 'package)
 (add-to-list 'package-archives
@@ -40,10 +39,37 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;; Install ac-cider if not already there
-;; Also installs cider
-(unless (package-installed-p 'ac-cider)
-  (package-install 'ac-cider))
+(defvar my-packages
+  '(;; key bindings and code colorization for Clojure
+    ;; https://github.com/clojure-emacs/clojure-mode
+    clojure-mode
+
+    ;; integration with a Clojure REPL
+    ;; https://github.com/clojure-emacs/cider
+    cider
+
+    ;; Enhances M-x to allow easier execution of commands. Provides
+    ;; a filterable list of possible commands in the minibuffer
+    ;; http://www.emacswiki.org/emacs/Smex
+    smex
+  
+    ;; auto-complete for cider
+    ac-cider
+
+    ;; colorful parenthesis matching
+    rainbow-delimiters))
+
+;; Install packages if not already there
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
+;; Enhances M-x to allow easier execution of commands. Provides
+;; a filterable list of possible commands in the minibuffer
+;; http://www.emacswiki.org/emacs/Smex
+(setq smex-save-file (concat user-emacs-directory ".smex-items"))
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
 
 ;; Setting up ac-cider
 (require 'ac-cider)
@@ -65,8 +91,8 @@
 (setq cider-repl-display-help-banner nil)
 
 ;; Enable autocomplete globally
-(require 'auto-complete)
-(global-auto-complete-mode t)
+;;(require 'auto-complete)
+;;(global-auto-complete-mode t)
 
 ;; Load solarized theme
 (load-theme 'solarized-dark t)
@@ -99,3 +125,20 @@
                               (scroll-up 1)))
   (defun track-mouse (e))
   (setq mouse-sel-mode t))
+
+;; ido 
+(ido-mode t)
+
+;; Don't show native OS scroll bars for buffers because they're redundant
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+ 
+ ;; unbind alt key
+(setq ns-alternate-modifier nil)
+
+;; Turn on recent file mode so that you can more easily switch to
+;; recently edited files when you first start emacs
+(setq recentf-save-file (concat user-emacs-directory ".recentf"))
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 40)
