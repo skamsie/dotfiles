@@ -23,6 +23,9 @@
 ;; Disable bell
 (setq ring-bell-function 'ignore)
 
+;; No cursor blinking, it's distracting
+(blink-cursor-mode 0)
+
 ;; Go straight to scratch buffer on startup
 (setq inhibit-startup-message t)
 
@@ -59,6 +62,8 @@
     ;; colorful parenthesis matching
     rainbow-delimiters))
 
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
 ;; Install packages if not already there
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -70,6 +75,10 @@
 (setq smex-save-file (concat user-emacs-directory ".smex-items"))
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
+
+;;Enable autocomplete globally
+(require 'auto-complete)
+(global-auto-complete-mode t)
 
 ;; Setting up ac-cider
 (require 'ac-cider)
@@ -90,18 +99,22 @@
 ;; Disable cider help banner
 (setq cider-repl-display-help-banner nil)
 
-;; Enable autocomplete globally
-;;(require 'auto-complete)
-;;(global-auto-complete-mode t)
-
 ;; Load solarized theme
 (load-theme 'solarized-dark t)
+
+;; auto close bracket insertion.
+(electric-pair-mode 1) 
 
 (unless (display-graphic-p)
   (solarized-with-color-variables 'dark
   (custom-theme-set-faces 'solarized-dark
     `(default ((,class (:foreground ,base0 :background ,nil)))))))
 
+(solarized-with-color-variables 'dark
+  (custom-theme-set-faces 'solarized-dark
+    `(cursor ((,class (:foreground ,base03 :background ,red))))
+    `(clojure-keyword-face ((t (:foreground ,blue))))
+    `(font-lock-function-name-face ((,class (:foreground ,yellow :underline nil :weight bold))))))
 ;; Function for swapping buffers
 (defun swap-buffer ()
   (interactive)
@@ -128,6 +141,9 @@
 
 ;; ido 
 (ido-mode t)
+
+;; make cursor a bar
+(setq-default cursor-type 'bar) 
 
 ;; Don't show native OS scroll bars for buffers because they're redundant
 (when (fboundp 'scroll-bar-mode)
