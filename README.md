@@ -1,5 +1,5 @@
 # dotfiles
 
 
-```cp -a dotfiles/emacs24_config ~/.emacs.d```
+```cp -r dotfiles/emacs24_config ~/.emacs.d```
 
