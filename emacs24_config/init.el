@@ -99,10 +99,6 @@
 ;; Disable cider help banner
 (setq cider-repl-display-help-banner nil)
 
-;; Load solarized theme
-;;(load-theme 'solarized-dark t)
-
-
 ;; Load and set solarized theme dark
 (add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-color-theme-solarized")
 (setq frame-background-mode 'dark)
