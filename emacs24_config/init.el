@@ -100,21 +100,18 @@
 (setq cider-repl-display-help-banner nil)
 
 ;; Load solarized theme
-(load-theme 'solarized-dark t)
+;;(load-theme 'solarized-dark t)
+
+
+;; Load and set solarized theme dark
+(add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-color-theme-solarized")
+(setq frame-background-mode 'dark)
+(load-theme 'solarized t)
+(enable-theme 'solarized)
 
 ;; auto close bracket insertion.
 (electric-pair-mode 1) 
 
-(unless (display-graphic-p)
-  (solarized-with-color-variables 'dark
-  (custom-theme-set-faces 'solarized-dark
-    `(default ((,class (:foreground ,base0 :background ,nil)))))))
-
-(solarized-with-color-variables 'dark
-  (custom-theme-set-faces 'solarized-dark
-    `(cursor ((,class (:foreground ,base03 :background ,red))))
-    `(clojure-keyword-face ((t (:foreground ,blue))))
-    `(font-lock-function-name-face ((,class (:foreground ,yellow :underline nil :weight bold))))))
 ;; Function for swapping buffers
 (defun swap-buffer ()
   (interactive)
