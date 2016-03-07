@@ -7,9 +7,9 @@
 ;; Disable backup
 (setq backup-inhibited t)
 
-
-;; Make emacs osx friendly
+;; Key bindings
 (setq mac-command-modifier 'super)
+(setq ns-alternate-modifier nil)
 (global-set-key (kbd "s-<right>") 'move-end-of-line)
 (global-set-key (kbd "s-<left>") 'move-beginning-of-line)
 (global-set-key (kbd "C-z") 'undo)
@@ -38,6 +38,10 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                     ("marmalade" . "http://marmalade-repo.org/packages/")
+                     ("melpa" . "http://melpa.org/packages/")))
+
 ;; Download the ELPA archive description if needed.
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -47,8 +51,7 @@
     ;; https://github.com/clojure-emacs/clojure-mode
     clojure-mode
 
-    ;; integration with a Clojure REPL
-    ;; https://github.com/clojure-emacs/cider
+    ;; integration with a Clojure REPL    ;; https://github.com/clojure-emacs/cider
     cider
 
     ;; Enhances M-x to allow easier execution of commands. Provides
@@ -87,6 +90,8 @@
 (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
 (eval-after-load "auto-complete"
   '(progn
+     ;; disable ac-quick-help (kinda hacky solution)
+     (defun ac-quick-help nil)
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
 
@@ -99,11 +104,14 @@
 ;; Disable cider help banner
 (setq cider-repl-display-help-banner nil)
 
-;; Load and set solarized theme dark
-(add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-color-theme-solarized")
-(setq frame-background-mode 'dark)
-(load-theme 'solarized t)
-(enable-theme 'solarized)
+;; Load theme tomorrow-night
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'load-path "~/.emacs.d/themes")
+(load-theme 'tomorrow-night t)
+
+;;(setq frame-background-mode 'dark)
+;;(load-theme 'solarized t)
+;;(enable-theme 'solarized)
 
 ;; auto close bracket insertion.
 (electric-pair-mode 1) 
@@ -136,15 +144,12 @@
 (ido-mode t)
 
 ;; make cursor a bar
-(setq-default cursor-type 'bar) 
+;; (setq-default cursor-type 'bar) 
 
 ;; Don't show native OS scroll bars for buffers because they're redundant
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
  
- ;; unbind alt key
-(setq ns-alternate-modifier nil)
-
 ;; Turn on recent file mode so that you can more easily switch to
 ;; recently edited files when you first start emacs
 (setq recentf-save-file (concat user-emacs-directory ".recentf"))
