@@ -1,5 +1,9 @@
-;; Disable menu bar
-(menu-bar-mode -1)
+;; Disablemenu bar and toolbmode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1))
+
+;; adding Apple Color Emoji font 
+(set-fontset-font t nil "Apple Color Emoji")
 
 ;; Highlights matching parenthesis
 (show-paren-mode 1)
@@ -7,24 +11,37 @@
 ;; Disable backup
 (setq backup-inhibited t)
 
-;; Key bindings
-(setq mac-command-modifier 'super)
+;; auto close bracket insertion.
+(electric-pair-mode 1) 
+
+;; No cursor blinking, it's distracting
+;; (blink-cursor-mode 0)
+
+;; Start maximized
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(set-frame-parameter (selected-frame) 'alpha '(92 92))
+(add-to-list 'default-frame-alist '(alpha 92 92))
+
+;; Key bindings OSX
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
 (setq ns-alternate-modifier nil)
-(global-set-key (kbd "s-<right>") 'move-end-of-line)
-(global-set-key (kbd "s-<left>") 'move-beginning-of-line)
+
+(global-set-key (kbd "M-<right>") 'move-end-of-line)
+(global-set-key (kbd "M-<left>") 'move-beginning-of-line)
+(global-set-key (kbd "M-<up>") 'beginning-of-buffer)
+(global-set-key (kbd "M-<down>") 'end-of-buffer)
 (global-set-key (kbd "C-z") 'undo)
 
 ;; Increase font just a tad
-(set-face-attribute 'default nil :height 130)
+(set-face-attribute 'default nil :height 134)
 
 ;; Disable auto save
 (setq auto-save-default nil)
 
 ;; Disable bell
 (setq ring-bell-function 'ignore)
-
-;; No cursor blinking, it's distracting
-(blink-cursor-mode 0)
 
 ;; Go straight to scratch buffer on startup
 (setq inhibit-startup-message t)
@@ -39,8 +56,8 @@
 (package-initialize)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                     ("marmalade" . "http://marmalade-repo.org/packages/")
-                     ("melpa" . "http://melpa.org/packages/")))
+			 ("marmalade" . "http://marmalade-repo.org/packages/")
+			 ("melpa" . "http://melpa.org/packages/")))
 
 ;; Download the ELPA archive description if needed.
 (when (not package-archive-contents)
@@ -61,6 +78,18 @@
   
     ;; auto-complete for cider
     ac-cider
+
+    ;; flycheck
+    flycheck
+
+    ;; clojure syntax checker
+    flycheck-clojure
+
+    ;; flycheck status emoji
+    flycheck-status-emoji
+
+    ;; jenkins client for emacs
+    jenkins
 
     ;; colorful parenthesis matching
     rainbow-delimiters))
@@ -90,7 +119,7 @@
 (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
 (eval-after-load "auto-complete"
   '(progn
-     ;; disable ac-quick-help (kinda hacky solution)
+     ;; disable ac-quick-help
      (defun ac-quick-help nil)
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
@@ -104,6 +133,12 @@
 ;; Disable cider help banner
 (setq cider-repl-display-help-banner nil)
 
+;; Flycheck clojure setup 
+(eval-after-load 'flycheck '(flycheck-clojure-setup))
+(eval-after-load 'flycheck '(flycheck-status-emoji-mode))
+(add-hook 'after-init-hook #'global-flycheck-mode)
+;;(flycheck-status-emoji-mode 1)
+
 ;; Load theme tomorrow-night
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
@@ -112,9 +147,6 @@
 ;;(setq frame-background-mode 'dark)
 ;;(load-theme 'solarized t)
 ;;(enable-theme 'solarized)
-
-;; auto close bracket insertion.
-(electric-pair-mode 1) 
 
 ;; Function for swapping buffers
 (defun swap-buffer ()
@@ -140,19 +172,22 @@
   (defun track-mouse (e))
   (setq mouse-sel-mode t))
 
-;; ido 
+;; Enable ido mode
 (ido-mode t)
 
 ;; make cursor a bar
-;; (setq-default cursor-type 'bar) 
+(setq-default cursor-type 'hbar)
 
 ;; Don't show native OS scroll bars for buffers because they're redundant
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
- 
-;; Turn on recent file mode so that you can more easily switch to
-;; recently edited files when you first start emacs
-(setq recentf-save-file (concat user-emacs-directory ".recentf"))
-(require 'recentf)
-(recentf-mode 1)
-(setq recentf-max-menu-items 40)
+
+;; Jenkins setup
+(setq jenkins-api-token "")
+(setq jenkins-url "")
+(setq jenkins-username "")
+
+;; prolog-mode
+(setq auto-mode-alist
+  (cons (cons "\\.pl" 'prolog-mode)
+     auto-mode-alist))
