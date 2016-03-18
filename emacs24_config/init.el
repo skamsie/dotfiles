@@ -1,9 +1,11 @@
-;; Disablemenu bar and toolbmode -1)
-(when (display-graphic-p)
-  (tool-bar-mode -1))
+;; Disable menu bar
+(menu-bar-mode -1)
 
-;; adding Apple Color Emoji font 
-(set-fontset-font t nil "Apple Color Emoji")
+;; Emacs UI only customizations
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+  (set-fontset-font t nil "Apple Color Emoji")
+  (blink-cursor-mode 0))
 
 ;; Highlights matching parenthesis
 (show-paren-mode 1)
@@ -13,9 +15,6 @@
 
 ;; auto close bracket insertion.
 (electric-pair-mode 1) 
-
-;; No cursor blinking, it's distracting
-;; (blink-cursor-mode 0)
 
 ;; Start maximized
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -176,7 +175,7 @@
 (ido-mode t)
 
 ;; make cursor a bar
-(setq-default cursor-type 'hbar)
+;;(setq-default cursor-type 'hbar)
 
 ;; Don't show native OS scroll bars for buffers because they're redundant
 (when (fboundp 'scroll-bar-mode)
@@ -187,7 +186,33 @@
 (setq jenkins-url "")
 (setq jenkins-username "")
 
-;; prolog-mode
+;;; Prolog mode
 (setq auto-mode-alist
   (cons (cons "\\.pl" 'prolog-mode)
      auto-mode-alist))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(prolog-program-name
+   (quote
+    (((getenv "EPROLOG")
+      (eval
+       (getenv "EPROLOG")))
+     (eclipse "eclipse")
+     (mercury nil)
+     (sicstus "sicstus")
+     (swi "/usr/local/bin/swipl")
+     (gnu "gprolog")
+     (yap "yap")
+     (xsb "xsb")
+     (t "prolog"))))
+ '(prolog-system (quote swi)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
