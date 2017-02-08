@@ -1,3 +1,7 @@
+execute pathogen#infect()
+
+filetype plugin indent on
+
 "set colors
 syntax enable
 set background=dark
@@ -17,3 +21,8 @@ endif
 
 "backspace in Insert mode
 set backspace=indent,eol,start
+
+"indentation
+set autoindent
+set smartindent
+set cindent
