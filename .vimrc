@@ -1,6 +1,7 @@
 execute pathogen#infect()
 
-filetype plugin indent on
+" air-line
+let g:airline_powerline_fonts = 1
 
 "set colors
 syntax enable
@@ -24,5 +25,6 @@ set backspace=indent,eol,start
 
 "indentation
 set autoindent
-set smartindent
-set cindent
+set laststatus=2
+set wildmode=longest,list
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.html.erb"
