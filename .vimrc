@@ -29,7 +29,6 @@ let g:airline_powerline_fonts = 1
 
 "others
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.html.erb"
-let g:netrw_liststyle=3
 let g:move_key_modifier='c'
 let g:airline#extensions#tabline#enabled = 1
 
@@ -39,3 +38,11 @@ filetype plugin indent on
 set omnifunc=syntaxcomplete#Complete
 autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 autocmd Filetype ruby setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+"netrw stuff
+let g:netrw_liststyle=3
+let g:netrw_browse_split = 4
+let g:netrw_winsize=25
+
+"viminfo
+set viminfo=f0,'0,<0
