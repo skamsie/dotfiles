@@ -1,10 +1,6 @@
 execute pathogen#infect()
 
-" air-line
-let g:airline_powerline_fonts = 1
-
 "set colors
-syntax enable
 set background=dark
 let g:solarized_termtrans=1
 let g:solarized_visibility = "high"
@@ -24,7 +20,22 @@ endif
 set backspace=indent,eol,start
 
 "indentation
-set autoindent
-set laststatus=2
+autocmd Filetype html setlocal ts=2 sts=2 sw=2
 set wildmode=longest,list
+
+"status bar (airline)
+set laststatus=2
+let g:airline_powerline_fonts = 1
+
+"others
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.html.erb"
+let g:netrw_liststyle=3
+let g:move_key_modifier='c'
+let g:airline#extensions#tabline#enabled = 1
+
+"code completion, syntax
+syntax enable
+filetype plugin indent on
+set omnifunc=syntaxcomplete#Complete
+autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd Filetype ruby setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
