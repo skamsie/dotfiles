@@ -9,7 +9,8 @@ colorscheme solarized
 
 "omni complete
 set omnifunc=syntaxcomplete#Complete
-autocmd CompleteDone * pclose
+set completeopt-=preview
+"autocmd CompleteDone * pclose
 
 "show line numbers
 set number
@@ -29,12 +30,12 @@ set wildmode=longest,list
 "status bar (airline)
 set laststatus=2
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 "others
 set noswapfile
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.html.erb"
 let g:move_key_modifier='c'
-let g:airline#extensions#tabline#enabled = 1
 
 "code completion, syntax
 syntax enable
@@ -44,8 +45,8 @@ autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 autocmd Filetype ruby setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 "netrw stuff
+let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
-"let g:netrw_browse_split = 4
 let g:netrw_winsize=25
 let g:netrw_altv=1
 
@@ -55,3 +56,9 @@ set viminfo=f0,'0,<0
 "resize vertical splits with ,.
 map , <c-w><
 map . <c-w>>
+
+"omni complete on <tab>
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = ""
+let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let g:SuperTabContextDiscoverDiscovery = ["&omnifunc:"]
