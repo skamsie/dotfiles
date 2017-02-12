@@ -3,7 +3,7 @@ execute pathogen#infect()
 "set colors
 set background=dark
 let g:solarized_termtrans=1
-let g:solarized_visibility = "high"
+let g:solarized_visibility = "normal"
 let g:solarized_contrast = "high"
 colorscheme solarized
 
@@ -24,11 +24,10 @@ endif
 "backspace in Insert mode
 set backspace=indent,eol,start
 
-"indentation
-set wildmode=longest,list
 
 "status bar (airline)
 set laststatus=2
+set wildmode=longest,list
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
@@ -57,7 +56,7 @@ set viminfo=f0,'0,<0
 map , <c-w><
 map . <c-w>>
 
-"omni complete on <tab>
+"omni complete on <tab> settings
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = ""
 let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
