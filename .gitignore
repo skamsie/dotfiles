@@ -10,3 +10,5 @@ auto-save-list
 backups
 .DS_Store
 *.elc
+.netrwhist 
+plugged/

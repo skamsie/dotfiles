@@ -1,0 +1,10 @@
+rbenv
+pyenv
+pyenv-virtualenv
+tmux
+reattach-to-user-namespace
+ag
+fzf
+swi-prolog
+leiningen
+vim
