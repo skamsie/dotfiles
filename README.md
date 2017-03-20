@@ -1,6 +1,8 @@
 ## brew
 
-```brew install $(<brew_packages.txt)```
+```bash
+brew upgrade $(<brew_packages.txt) && yes | /usr/local/opt/fzf/install
+```
 
 ## vim
 
