@@ -17,7 +17,7 @@ Plug 'majutsushi/tagbar'
 Plug 'matze/vim-move'
 Plug 'mhinz/vim-startify'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'python-mode/python-mode'
+Plug 'python-mode/python-mode', {'branch': 'develop'}
 Plug 'timakro/vim-searchant'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
@@ -154,7 +154,13 @@ highlight StartifyPath ctermfg=11
 set fillchars+=vert:│
 hi VertSplit ctermbg=NONE guibg=NONE
 
-"-- PYTHON-MODE --
+"-- PYTHON --
+function AddDebugPython()
+  execute "normal oimport pdb; pdb.set_trace()\<Esc>"
+endfunction
+
+autocmd Filetype python map <leader>d :call AddDebugPython()<cr>
+
 let g:pymode_breakpoint = 0
 let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_regenerate_on_write = 0
@@ -165,13 +171,23 @@ let g:pymode_rope_goto_definition_cmd = 'e'
 let g:pymode_lint_checkers = ['pyflakes']
 let g:pymode_rope_goto_definition_bind = 'gd'
 let g:pymode_options = 0
+let g:pymode_lint = 0
+
+let test#python#runner = 'nose'
+let test#python#nose#options = '--verbose --nocapture'
 
 " -- RUBY --
 " install ctags: brew install ctags
 " install rbenv ctags: https://github.com/tpope/rbenv-ctags
 " install gem-ctags: gem install gem-ctags
 " generate tags in the project dir with: ctags -R .
-autocmd Filetype ruby nmap <leader>r :!ruby %<cr>
+function AddDebugRuby()
+  execute "normal orequire 'pry'; binding.pry\<Esc>"
+endfunction
+
+autocmd Filetype ruby
+  \ nmap <leader>r :!ruby %<cr> |
+  \ map <leader>d :call AddDebugRuby()<cr>
 
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_load_gemfile = 1
