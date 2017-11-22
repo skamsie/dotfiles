@@ -34,7 +34,6 @@ Plug 'itchyny/calendar.vim'
 
 call plug#end()
 
-
 "-- NEOVIM SPECIFIC--
 "
 
@@ -57,9 +56,6 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-
-" show vertical line at 120 characters
-set colorcolumn=120
 
 " allow changing buffers without saving
 set hidden
@@ -156,10 +152,12 @@ hi VertSplit ctermbg=NONE guibg=NONE
 
 "-- PYTHON --
 function AddDebugPython()
-  execute "normal oimport pdb; pdb.set_trace()\<Esc>"
+  execute "normal oimport ipdb; ipdb.set_trace()\<Esc>"
 endfunction
 
-autocmd Filetype python map <leader>d :call AddDebugPython()<cr>
+autocmd Filetype python
+  \ set colorcolumn=100 |
+  \ map <leader>d :call AddDebugPython()<cr>
 
 let g:pymode_breakpoint = 0
 let g:pymode_rope_lookup_project = 0
@@ -186,6 +184,7 @@ function AddDebugRuby()
 endfunction
 
 autocmd Filetype ruby
+  \ set colorcolumn=120 |
   \ nmap <leader>r :!ruby %<cr> |
   \ map <leader>d :call AddDebugRuby()<cr>
 
@@ -214,7 +213,14 @@ command! -bang -nargs=* Ag
       \ call fzf#vim#ag(<q-args>,
       \                 <bang>0 ? fzf#vim#with_preview('up:60%')
       \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \                 <bang>0)
+      \ <bang>0)
+
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
 
 let g:fzf_colors =
       \ { 'fg':      ['fg', 'Normal'],
@@ -249,6 +255,14 @@ nmap <leader>s :Startify<cr>
 "-- CALENDAR --
 let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
+
+"-- GOYO --
+function! s:goyo_leave()
+  set fillchars+=vert:│
+  hi VertSplit ctermbg=NONE guibg=NONE
+endfunction
+
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 "-- OTHERS --
 
