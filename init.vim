@@ -52,7 +52,6 @@ set tags+=gems.tags
 syntax enable
 filetype plugin on
 filetype indent on
-
 " global tab settings
 set expandtab
 set tabstop=4
@@ -94,11 +93,13 @@ autocmd Filetype ruby,eruby,vim,haml,cucumber,css,sass
 autocmd Filetype go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 "-- COLORS --
+
+set termguicolors
+colorscheme NeoSolarized
 set background=dark
 let g:solarized_termtrans=1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
-colorscheme solarized
 
 "-- AIRLINE --
 let g:airline_theme='solarized'
