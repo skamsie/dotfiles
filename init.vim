@@ -8,6 +8,7 @@ Plug 'alvan/vim-closetag'
 Plug 'ap/vim-css-color'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
+Plug 'itchyny/calendar.vim'
 Plug 'janko-m/vim-test'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
@@ -17,34 +18,35 @@ Plug 'majutsushi/tagbar'
 Plug 'matze/vim-move'
 Plug 'mhinz/vim-startify'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'python-mode/python-mode', {'branch': 'develop'}
+Plug 'python-mode/python-mode'
+Plug 'skamsie/vim-news-headlines'
 Plug 'timakro/vim-searchant'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-ruby/vim-ruby'
-Plug 'itchyny/calendar.vim'
 
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
 "
 
-let g:python_host_prog = '/Users/adimian/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '/Users/adimian/.pyenv/versions/neovim3/bin/python'
-set noincsearch
+"https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
+let g:python_host_prog = $HOME . '/.pyenv/versions/neovim2/bin/python'
+let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 :tnoremap <Space><Esc> <C-\><C-n>
 
 "-- GENERAL --
 
+set noincsearch
 set iskeyword+=-
 set tags+=gems.tags
 syntax enable
@@ -80,6 +82,9 @@ set wildmode=longest,list
 
 " disable bell
 set noerrorbells visualbell t_vb=
+
+" make sure vertical separator is a |
+set fillchars+=vert:│
 
 set ttimeoutlen=10
 
@@ -146,12 +151,12 @@ highlight StartifySlash ctermfg=11
 highlight StartifyFile ctermfg=14
 highlight StartifyPath ctermfg=11
 
-" make split bar thinner
-set fillchars+=vert:│
+" Custom Colors
 hi VertSplit ctermbg=NONE guibg=NONE
+hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 
 "-- PYTHON --
-function AddDebugPython()
+function! AddDebugPython()
   execute "normal oimport ipdb; ipdb.set_trace()\<Esc>"
 endfunction
 
@@ -179,7 +184,7 @@ let test#python#nose#options = '--verbose --nocapture'
 " install rbenv ctags: https://github.com/tpope/rbenv-ctags
 " install gem-ctags: gem install gem-ctags
 " generate tags in the project dir with: ctags -R .
-function AddDebugRuby()
+function! AddDebugRuby()
   execute "normal orequire 'pry'; binding.pry\<Esc>"
 endfunction
 
@@ -210,31 +215,31 @@ set rtp+=/usr/local/opt/fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
 command! -bang -nargs=* Ag
-      \ call fzf#vim#ag(<q-args>,
-      \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-      \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \ <bang>0)
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \ <bang>0)
 
 command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-      \   <bang>0 ? fzf#vim#with_preview('up:60%')
-      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \   <bang>0)
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
 let g:fzf_colors =
-      \ { 'fg':      ['fg', 'Normal'],
-      \   'bg':      ['bg', 'Normal'],
-      \   'hl':      ['fg', 'Comment'],
-      \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \   'hl+':     ['fg', 'Statement'],
-      \   'info':    ['fg', 'PreProc'],
-      \   'prompt':  ['fg', 'Conditional'],
-      \   'pointer': ['fg', 'Exception'],
-      \   'marker':  ['fg', 'Keyword'],
-      \   'spinner': ['fg', 'Label'],
-      \   'header':  ['fg', 'Comment'] }
+  \ { 'fg':      ['fg', 'Normal'],
+  \   'bg':      ['bg', 'Normal'],
+  \   'hl':      ['fg', 'Comment'],
+  \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \   'hl+':     ['fg', 'Statement'],
+  \   'info':    ['fg', 'PreProc'],
+  \   'prompt':  ['fg', 'Conditional'],
+  \   'pointer': ['fg', 'Exception'],
+  \   'marker':  ['fg', 'Keyword'],
+  \   'spinner': ['fg', 'Label'],
+  \   'header':  ['fg', 'Comment'] }
 
 nmap <leader>f :FZF<cr>
 nmap <leader>b :Buffers<cr>
@@ -257,6 +262,10 @@ let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
 
 "-- GOYO --
+
+let g:goyo_width = 100
+let g:goyo_height = "80%"
+
 function! s:goyo_leave()
   set fillchars+=vert:│
   hi VertSplit ctermbg=NONE guibg=NONE
@@ -272,3 +281,10 @@ let g:html_indent_inctags = "html,body,head,tbody,p,nav"
 let g:searchant_all = 0
 let g:better_whitespace_enabled = 1
 let g:peekaboo_window = "vert to 40new"
+
+let g:news_headlines_default_topic_lang = 'en'
+let g:news_headlines_sources = 'wired, cnn, hacker-news, vice-news'
+let g:news_headlines_topics =
+  \ [ {'topic': 'climate change', 'sort_by': 'popularity'},
+  \   {'topic': 'parlament', 'sort_by': 'popularity', 'language': 'ro'}
+  \ ]
