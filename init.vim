@@ -7,8 +7,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'alvan/vim-closetag'
 Plug 'ap/vim-css-color'
 Plug 'ervandew/supertab'
-Plug 'fatih/vim-go'
-Plug 'itchyny/calendar.vim'
 Plug 'janko-m/vim-test'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
@@ -47,7 +45,7 @@ let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 "-- GENERAL --
 
 set noincsearch
-set iskeyword+=-
+"set iskeyword+=-
 set tags+=gems.tags
 syntax enable
 filetype plugin on
@@ -111,7 +109,7 @@ let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_section_c = '%f'
-let g:airline#extensions#tabline#buffers_label = 'β'
+let g:airline#extensions#tabline#buffers_label = '♡'
 
 "-- NETRW --
 let g:netrw_liststyle = 3
@@ -178,6 +176,7 @@ let g:pymode_lint = 0
 
 let test#python#runner = 'nose'
 let test#python#nose#options = '--verbose --nocapture'
+let test#strategy = 'neovim'
 
 " -- RUBY --
 " install ctags: brew install ctags
@@ -187,6 +186,7 @@ let test#python#nose#options = '--verbose --nocapture'
 function! AddDebugRuby()
   execute "normal orequire 'pry'; binding.pry\<Esc>"
 endfunction
+
 
 autocmd Filetype ruby
   \ set colorcolumn=120 |
@@ -204,10 +204,6 @@ let ruby_no_expensive = 1
 " overriting some of the vim-ruby colors
 hi rubyPseudoVariable ctermfg=9
 hi rubyBoolean ctermfg=9
-
-" -- GO --
-let g:go_fmt_autosave = 1
-au FileType go nmap <leader>r <Plug>(go-run)
 
 " -- FZF --
 "It needs fzf and ag command line tools
@@ -283,8 +279,9 @@ let g:better_whitespace_enabled = 1
 let g:peekaboo_window = "vert to 40new"
 
 let g:news_headlines_default_topic_lang = 'en'
-let g:news_headlines_sources = 'wired, cnn, hacker-news, vice-news'
+let g:news_headlines_sources = 'cnn, bbc-news, techcrunch, hacker-news, the-next-web, vice-news'
 let g:news_headlines_topics =
-  \ [ {'topic': 'climate change', 'sort_by': 'popularity'},
-  \   {'topic': 'parlament', 'sort_by': 'popularity', 'language': 'ro'}
+  \ [
+  \   {'topic': 'parlament', 'sort_by': 'popularity', 'language': 'ro'},
+  \   {'topic': '#rezist', 'sort_by': 'relevance', 'language': 'ro'}
   \ ]
