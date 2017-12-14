@@ -14,7 +14,7 @@
 (setq backup-inhibited t)
 
 ;; auto close bracket insertion.
-(electric-pair-mode 1) 
+(electric-pair-mode 1)
 
 ;; Start maximized
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -55,8 +55,8 @@
 (package-initialize)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("marmalade" . "http://marmalade-repo.org/packages/")
-			 ("melpa" . "http://melpa.org/packages/")))
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")))
 
 ;; Download the ELPA archive description if needed.
 (when (not package-archive-contents)
@@ -74,7 +74,7 @@
     ;; a filterable list of possible commands in the minibuffer
     ;; http://www.emacswiki.org/emacs/Smex
     smex
-  
+
     ;; auto-complete for cider
     ac-cider
 
@@ -117,11 +117,11 @@
 (add-hook 'cider-mode-hook 'ac-cider-setup)
 (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
 (eval-after-load "auto-complete"
-  '(progn
-     ;; disable ac-quick-help
-     (defun ac-quick-help nil)
-     (add-to-list 'ac-modes 'cider-mode)
-     (add-to-list 'ac-modes 'cider-repl-mode)))
+                 '(progn
+                    ;; disable ac-quick-help
+                    (defun ac-quick-help nil)
+                    (add-to-list 'ac-modes 'cider-mode)
+                    (add-to-list 'ac-modes 'cider-repl-mode)))
 
 (defun set-auto-complete-as-completion-at-point-function ()
   (setq completion-at-point-functions '(auto-complete)))
@@ -132,7 +132,7 @@
 ;; Disable cider help banner
 (setq cider-repl-display-help-banner nil)
 
-;; Flycheck clojure setup 
+;; Flycheck clojure setup
 (eval-after-load 'flycheck '(flycheck-clojure-setup))
 (eval-after-load 'flycheck '(flycheck-status-emoji-mode))
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -151,12 +151,12 @@
 (defun swap-buffer ()
   (interactive)
   (cond ((one-window-p) (display-buffer (other-buffer)))
-  ((let* ((buffer-a (current-buffer))
-    (window-b (cadr (window-list)))
-    (buffer-b (window-buffer window-b)))
-     (set-window-buffer window-b buffer-a)
-     (switch-to-buffer buffer-b)
-                (other-window 1)))))
+        ((let* ((buffer-a (current-buffer))
+                (window-b (cadr (window-list)))
+                (buffer-b (window-buffer window-b)))
+           (set-window-buffer window-b buffer-a)
+           (switch-to-buffer buffer-b)
+           (other-window 1)))))
 
 ;; Enable mouse support
 (unless window-system
@@ -188,31 +188,31 @@
 
 ;;; Prolog mode
 (setq auto-mode-alist
-  (cons (cons "\\.pl" 'prolog-mode)
-     auto-mode-alist))
+      (cons (cons "\\.pl" 'prolog-mode)
+            auto-mode-alist))
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(prolog-program-name
-   (quote
-    (((getenv "EPROLOG")
-      (eval
-       (getenv "EPROLOG")))
-     (eclipse "eclipse")
-     (mercury nil)
-     (sicstus "sicstus")
-     (swi "/usr/local/bin/swipl")
-     (gnu "gprolog")
-     (yap "yap")
-     (xsb "xsb")
-     (t "prolog"))))
- '(prolog-system (quote swi)))
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+  '(prolog-program-name
+     (quote
+       (((getenv "EPROLOG")
+         (eval
+           (getenv "EPROLOG")))
+        (eclipse "eclipse")
+        (mercury nil)
+        (sicstus "sicstus")
+        (swi "/usr/local/bin/swipl")
+        (gnu "gprolog")
+        (yap "yap")
+        (xsb "xsb")
+        (t "prolog"))))
+  '(prolog-system (quote swi)))
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+  )

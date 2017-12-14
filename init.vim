@@ -5,19 +5,18 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'airblade/vim-gitgutter'
 Plug 'alvan/vim-closetag'
-Plug 'ap/vim-css-color'
 Plug 'ervandew/supertab'
 Plug 'janko-m/vim-test'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-peekaboo'
 Plug 'majutsushi/tagbar'
-Plug 'matze/vim-move'
+Plug 'matze/vim-move', { 'tag': 'v1.3'}
 Plug 'mhinz/vim-startify'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'python-mode/python-mode'
-Plug 'skamsie/vim-news-headlines'
+Plug 'Rip-Rip/clang_complete'
+Plug 'skamsie/nnn'
 Plug 'timakro/vim-searchant'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
@@ -30,11 +29,12 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-ruby/vim-ruby'
+Plug 'altercation/vim-colors-solarized'
 
+"Plug 'ap/vim-css-color'
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
-"
 
 "https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 let g:python_host_prog = $HOME . '/.pyenv/versions/neovim2/bin/python'
@@ -42,7 +42,7 @@ let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 :tnoremap <Space><Esc> <C-\><C-n>
 
-"-- GENERAL --
+"-- GENERAL VIM BELOW THIS LINE --
 
 set noincsearch
 "set iskeyword+=-
@@ -93,6 +93,7 @@ autocmd Filetype go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 "-- COLORS --
 set background=dark
+
 let g:solarized_termtrans=1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
@@ -118,7 +119,7 @@ let g:netrw_localrmdir = 'rm -rf'
 
 "-- SUPERTAB & OMNI COMPLETE --
 let g:SuperTabCrMapping = 1
-let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabDefaultCompletionType = "context"
 
 function! PyContext()
   call pymode#rope#complete(0)
@@ -133,16 +134,13 @@ set omnifunc=syntaxcomplete#Complete
 set completeopt-=preview
 
 "-- STARTIFY --
-function! startify#fortune#boxed() abort
-  return ['      ' . getcwd()]
-endfunction
-
 let g:startify_change_to_dir = 0
 let g:startify_padding_left = 8
-let g:startify_custom_header =  'map([] + startify#fortune#boxed(), "\"   \".v:val")'
 let g:startify_update_oldfiles = 1
-let g:startify_files_number=10
+let g:startify_custom_header = ['      ' . getcwd()]
+let g:startify_files_number = 10
 let g:startify_bookmarks = [ {'c': '~/.vimrc'}, {'l': '~/.zshrc'}, {'f': '~/.config/nvim/init.vim'} ]
+let g:startify_commands = [{'n': ':NNN'}]
 
 " This part has to be after the color theme was loaded
 highlight StartifySlash ctermfg=11
@@ -150,7 +148,7 @@ highlight StartifyFile ctermfg=14
 highlight StartifyPath ctermfg=11
 
 " Custom Colors
-hi VertSplit ctermbg=NONE guibg=NONE
+hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
 hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 
 "-- PYTHON --
@@ -187,9 +185,8 @@ function! AddDebugRuby()
   execute "normal orequire 'pry'; binding.pry\<Esc>"
 endfunction
 
-
 autocmd Filetype ruby
-  \ set colorcolumn=120 |
+  \ set colorcolumn=100,120 |
   \ nmap <leader>r :!ruby %<cr> |
   \ map <leader>d :call AddDebugRuby()<cr>
 
@@ -248,17 +245,9 @@ nmap <leader>css :call css_color#toggle()<cr>
 " -- MAPS --
 map <Space> <leader>
 
-" Resize vertical split with alt+; & alt+'
-map … <c-w><
-map æ <c-w>>
 nmap <leader>s :Startify<cr>
 
-"-- CALENDAR --
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
-
 "-- GOYO --
-
 let g:goyo_width = 100
 let g:goyo_height = "80%"
 
@@ -269,19 +258,41 @@ endfunction
 
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-"-- OTHERS --
+"-- NNN ---
+let g:nnn_limit_topics_at = 15
+let g:nnn_browser = 'firefox'
+let g:nnn_nomodifiable = 1
+let g:nnn_default_topic_lang = 'en'
+let g:nnn_sources = 'wired, hacker-news, cnn, the-next-web, vice-news'
+let g:nnn_topics =
+  \ [
+  \   {'topic': 'machine learning'},
+  \   {'topic': 'berlin', 'sort_by': 'popularity', 'language': 'de'},
+  \   {'topic': 'politica', 'sort_by': 'popularity', 'language': 'ro'},
+  \ ]
 
+function! SetNHColors()
+ hi link NHTitle Constant
+endfunction`
+
+au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
+
+" -- C --
+" Path to clang on OSX High Sierra
+let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/' .
+  \ 'Toolchains/XcodeDefault.xctoolchain/usr/lib'
+
+autocmd Filetype c
+  \ nmap <leader>r :! cc -Wall -std=c99 % -o vimout && ./vimout && rm vimout<CR>
+
+"-- OTHERS --
 let g:move_key_modifier = 'C'
+
+" resize vertical split
+noremap <c-h> <c-w><
+noremap <c-l> <c-w>>
+
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.erb,*.xml"
 let g:html_indent_inctags = "html,body,head,tbody,p,nav"
 let g:searchant_all = 0
 let g:better_whitespace_enabled = 1
-let g:peekaboo_window = "vert to 40new"
-
-let g:news_headlines_default_topic_lang = 'en'
-let g:news_headlines_sources = 'cnn, bbc-news, techcrunch, hacker-news, the-next-web, vice-news'
-let g:news_headlines_topics =
-  \ [
-  \   {'topic': 'parlament', 'sort_by': 'popularity', 'language': 'ro'},
-  \   {'topic': '#rezist', 'sort_by': 'relevance', 'language': 'ro'}
-  \ ]

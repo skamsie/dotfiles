@@ -1,0 +1,8 @@
+[user]
+    name = Alexandru Dimian
+    email = alexandru.dimian@gmail.com
+[core]
+    editor = /usr/bin/vim
+    excludesfile = ~/.gitignore
+[alias]
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
