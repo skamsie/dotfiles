@@ -29,9 +29,18 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-bundler'
 Plug 'altercation/vim-colors-solarized'
+Plug 'terryma/vim-multiple-cursors'
 
-"Plug 'ap/vim-css-color'
+"Experimental
+
+"Plug 'AlessandroYorba/Sierra'
+"Plug 'metakirby5/codi.vim'
+Plug 'ap/vim-css-color'
+Plug 'edkolev/tmuxline.vim'
+
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
@@ -44,7 +53,7 @@ let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 "-- GENERAL VIM BELOW THIS LINE --
 
-set noincsearch
+"set noincsearch
 "set iskeyword+=-
 set tags+=gems.tags
 syntax enable
@@ -53,9 +62,9 @@ filetype indent on
 
 " global tab settings
 set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 
 " allow changing buffers without saving
 set hidden
@@ -97,6 +106,7 @@ set background=dark
 let g:solarized_termtrans=1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
+
 colorscheme solarized
 
 "-- AIRLINE --
@@ -110,7 +120,7 @@ let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_section_c = '%f'
-let g:airline#extensions#tabline#buffers_label = '♡'
+let g:airline#extensions#tabline#buffers_label = '♡ '
 
 "-- NETRW --
 let g:netrw_liststyle = 3
@@ -186,9 +196,11 @@ function! AddDebugRuby()
 endfunction
 
 autocmd Filetype ruby
-  \ set colorcolumn=100,120 |
+  \ set colorcolumn=80,120 |
   \ nmap <leader>r :!ruby %<cr> |
   \ map <leader>d :call AddDebugRuby()<cr>
+
+autocmd Filetype javascript set colorcolumn=80
 
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_load_gemfile = 1
@@ -198,7 +210,7 @@ let ruby_operators = 1
 let ruby_space_errors = 1
 let ruby_no_expensive = 1
 
-" overriting some of the vim-ruby colors
+"Overwriting some of the vim-ruby colors
 hi rubyPseudoVariable ctermfg=9
 hi rubyBoolean ctermfg=9
 
@@ -285,14 +297,24 @@ let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/' .
 autocmd Filetype c
   \ nmap <leader>r :! cc -Wall -std=c99 % -o vimout && ./vimout && rm vimout<CR>
 
+"-- TMUXLINE --
+let g:tmuxline_powerline_separators = 1
+let g:tmuxline_theme = 'airline'
+let g:tmuxline_preset = {
+  \'a'       : '#S',
+  \'c'       : '#h',
+  \'win'     : '#I:#W#F',
+  \'cwin'    : '#I:#W#F',
+  \'y'       : '%H:%M',
+  \'z'       : "#(ps -p #(${CHILD_PID}) -o comm= | cut -c 1-60) #[fg=red, bold]#(${CHILD_PID})#[fg=default]",
+  \'options' : {'status-justify' : 'left'}}
+
 "-- OTHERS --
 let g:move_key_modifier = 'C'
-
 " resize vertical split
 noremap <c-h> <c-w><
 noremap <c-l> <c-w>>
-
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.erb,*.xml"
-let g:html_indent_inctags = "html,body,head,tbody,p,nav"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
+let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
 let g:better_whitespace_enabled = 1
