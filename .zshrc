@@ -5,6 +5,9 @@ source ~/.bash_profile
 # How often to auto-update (in days).
 export UPDATE_ZSH_DAYS=10
 
+# enable iex history
+export ERL_AFLAGS="-kernel shell_history enabled"
+
 plugins=(
   # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#osx
   osx

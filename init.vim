@@ -22,24 +22,30 @@ Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'altercation/vim-colors-solarized'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'edkolev/tmuxline.vim'
+
+" Ruby
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-bundler'
-Plug 'altercation/vim-colors-solarized'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-rails'
+
+" Elixir
+Plug 'elixir-editors/vim-elixir'
+Plug 'slashmili/alchemist.vim'
 
 "Experimental
 
 "Plug 'AlessandroYorba/Sierra'
 "Plug 'metakirby5/codi.vim'
-Plug 'ap/vim-css-color'
-Plug 'edkolev/tmuxline.vim'
+"Plug 'ap/vim-css-color'
 
 call plug#end()
 
@@ -129,13 +135,13 @@ let g:netrw_localrmdir = 'rm -rf'
 
 "-- SUPERTAB & OMNI COMPLETE --
 let g:SuperTabCrMapping = 1
-"let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabDefaultCompletionType = "context"
 
 function! PyContext()
   call pymode#rope#complete(0)
 endfunction
 
-autocmd Filetype cucumber,css,sass,go let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+autocmd Filetype cucumber,css,sass,go,elixir g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 autocmd Filetype python let g:SuperTabCompletionContexts =
       \['PyContext', 's:ContextDiscover']
 
@@ -149,7 +155,13 @@ let g:startify_padding_left = 8
 let g:startify_update_oldfiles = 1
 let g:startify_custom_header = ['      ' . getcwd()]
 let g:startify_files_number = 10
-let g:startify_bookmarks = [ {'c': '~/.vimrc'}, {'l': '~/.zshrc'}, {'f': '~/.config/nvim/init.vim'} ]
+let g:startify_bookmarks =
+  \ [
+  \   {'c': '~/.vimrc'},
+  \   {'l': '~/.zshrc'},
+  \   {'f': '~/.config/nvim/init.vim'},
+  \   {'t': '~/.tmux.conf'}
+  \ ]
 let g:startify_commands = [{'n': ':NNN'}]
 
 " This part has to be after the color theme was loaded
@@ -301,13 +313,13 @@ autocmd Filetype c
 let g:tmuxline_powerline_separators = 1
 let g:tmuxline_theme = 'airline'
 let g:tmuxline_preset = {
-  \'a'       : '#S',
-  \'c'       : '#h',
-  \'win'     : '#I:#W#F',
-  \'cwin'    : '#I:#W#F',
-  \'y'       : '%H:%M',
-  \'z'       : "#(ps -p #(${CHILD_PID}) -o comm= | cut -c 1-60) #[fg=red, bold]#(${CHILD_PID})#[fg=default]",
-  \'options' : {'status-justify' : 'left'}}
+  \  'a'       : '#S',
+  \  'c'       : '#{?#{==:#{pane_current_command},ssh},#[fg=yellow]#(ps -t #{pane_tty} -o args= | cut -c 5-)#[fg=default],•}',
+  \  'win'     : '#I:#W#F',
+  \  'cwin'    : '#I:#W#F',
+  \  'y'       : '%H:%M',
+  \  'z'       : "#(ps -p #(${CHILD_PID}) -o comm= | cut -c 1-60) #[fg=red, bold]#(${CHILD_PID})#[fg=default]",
+  \  'options' : {'status-justify' : 'left'}}
 
 "-- OTHERS --
 let g:move_key_modifier = 'C'
