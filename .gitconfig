@@ -1,8 +1,24 @@
 [user]
-    name = Alexandru Dimian
-    email = alexandru.dimian@gmail.com
+  name = Alexandru Dimian
+  email = alexandru.dimian@gmail.com
+
 [core]
-    editor = /usr/bin/vim
-    excludesfile = ~/.gitignore
+  excludesfile = ~/.global_gitignore
+
 [alias]
-    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  br = branch --sort=committerdate
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  changelog = log --pretty=format:\"%h %ad | %s [%an]\" --date=short --no-merges
+  show-conflicts = diff --name-only --diff-filter=U
+  logg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit
+
+[pager]
+  log  = diff-so-fancy | less
+  show = diff-so-fancy | less
+  diff = diff-so-fancy | less
+
+[format]
+  pretty = oneline
+
+[log]
+  decorate = short

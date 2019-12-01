@@ -49,4 +49,6 @@
 
 ## emacs
 
-```cp -r dotfiles/emacs24_config ~/.emacs.d```
+```bash
+> cp -r dotfiles/emacs24_config ~/.emacs.d
+```
