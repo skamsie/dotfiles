@@ -1,16 +1,16 @@
 ## brew
 
 ```bash
-brew install $(<brew_packages.txt) && brew upgrade && yes | /usr/local/opt/fzf/install
+> brew install $(<brew_packages.txt) && brew upgrade && yes | /usr/local/opt/fzf/install
 ```
 
 ## vim
 
 ```bash
-cp -r .vim ~ && cp .vimrc ~ && vim -c ":silent PlugInstall | qa"
+> cp -r .vim ~ && cp .vimrc ~ && vim -c ":silent PlugInstall | qa"
 
 # custom solarized airline theme
-cp solarized_patched.vim ~/.vim/plugged/vim-airline-themes/autoload/airline/themes/solarized.vim
+> cp solarized_patched.vim ~/.vim/plugged/vim-airline-themes/autoload/airline/themes/solarized.vim
 ```
 
 ## neovim
@@ -18,27 +18,34 @@ cp solarized_patched.vim ~/.vim/plugged/vim-airline-themes/autoload/airline/them
 ```bash
 > brew install neovim
 
-> n_dir=~/.config/nvim mkdir -p $n_dir && cp init.vim $n_dir && cp coc-settings.json $n_dir
+# copy files
+> n_dir=~/.config/nvim && mkdir -p $n_dir && cp init.vim $n_dir && cp coc-settings.json $n_dir
 
+# install plug https://github.com/junegunn/vim-plug
+> curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# install plugins with plug
 > nvim -c ":silent PlugInstall | qa"
-```
 
-# custom solarized airline theme
-cp solarized_patched.vim ~/.vim/plugged/vim-airline-themes/autoload/airline/themes/solarized.vim
+# install coc extensions https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
+> nvim -c 'CocInstall -sync coc-json coc-html coc-prettier coc-solargraph coc-python coc-css| q'
+
+# copy custom solarized airline theme
+> cp solarized_patched.vim ~/.local/share/nvim/plugged/vim-airline-themes/autoload/airline/themes/solarized.vim
 ```
 
 ## tmux
 
-Tmux plugins manager
+```bash
+# Tmux plugins manager (https://github.com/tmux-plugins/tpm)
+> git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm```
 
-```git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm```
+# copy tmux config
+> cp .tmux.conf ~
 
-Copy tmux config
-
-```cp .tmux.conf ~```
-
-
-In a tmux session install with prefix + I
+# In a tmux session install with prefix + I
+``````
 
 ## emacs
 
