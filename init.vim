@@ -5,31 +5,34 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'airblade/vim-gitgutter'
 Plug 'alvan/vim-closetag'
-Plug 'ervandew/supertab'
 Plug 'janko-m/vim-test'
 Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'matze/vim-move', { 'tag': 'v1.3'}
-Plug 'mhinz/vim-startify'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'python-mode/python-mode'
 Plug 'Rip-Rip/clang_complete'
 Plug 'skamsie/nnn'
-Plug 'timakro/vim-searchant'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'altercation/vim-colors-solarized'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'edkolev/tmuxline.vim'
+Plug 'mhinz/vim-startify'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'altercation/vim-colors-solarized'
+Plug 'timakro/vim-searchant'
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-endwise'
+Plug 'arcticicestudio/nord-vim'
+Plug 'cocopon/colorswatch.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'chrisbra/csv.vim'
 
 " Ruby
 Plug 'vim-ruby/vim-ruby'
@@ -42,7 +45,6 @@ Plug 'elixir-editors/vim-elixir'
 Plug 'slashmili/alchemist.vim'
 
 "Experimental
-
 "Plug 'AlessandroYorba/Sierra'
 "Plug 'metakirby5/codi.vim'
 "Plug 'ap/vim-css-color'
@@ -57,8 +59,6 @@ let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 :tnoremap <Space><Esc> <C-\><C-n>
 
-"-- GENERAL VIM BELOW THIS LINE --
-
 "set noincsearch
 "set iskeyword+=-
 set tags+=gems.tags
@@ -71,6 +71,7 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
+set nohlsearch
 
 " allow changing buffers without saving
 set hidden
@@ -109,14 +110,19 @@ autocmd Filetype go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 "-- COLORS --
 set background=dark
 
+"let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
 
-colorscheme solarized
+let terminal_theme = substitute(system('term-profile'), '\n\+$', '', '')
+let color_theme = split(substitute(terminal_theme, '_', ' ', ''), ' ')[0]
+execute "colorscheme ".color_theme
+
+"colorscheme nord
 
 "-- AIRLINE --
-let g:airline_theme='solarized'
+let g:airline_theme = color_theme
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -133,18 +139,6 @@ let g:netrw_liststyle = 3
 let g:netrw_altv = 1
 let g:netrw_localrmdir = 'rm -rf'
 
-"-- SUPERTAB & OMNI COMPLETE --
-let g:SuperTabCrMapping = 1
-let g:SuperTabDefaultCompletionType = "context"
-
-function! PyContext()
-  call pymode#rope#complete(0)
-endfunction
-
-autocmd Filetype cucumber,css,sass,go,elixir g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-autocmd Filetype python let g:SuperTabCompletionContexts =
-      \['PyContext', 's:ContextDiscover']
-
 set completeopt+=noselect
 set omnifunc=syntaxcomplete#Complete
 set completeopt-=preview
@@ -157,6 +151,7 @@ let g:startify_custom_header = ['      ' . getcwd()]
 let g:startify_files_number = 10
 let g:startify_bookmarks =
   \ [
+  \   {'a': '.'},
   \   {'c': '~/.vimrc'},
   \   {'l': '~/.zshrc'},
   \   {'f': '~/.config/nvim/init.vim'},
@@ -165,13 +160,14 @@ let g:startify_bookmarks =
 let g:startify_commands = [{'n': ':NNN'}]
 
 " This part has to be after the color theme was loaded
-highlight StartifySlash ctermfg=11
-highlight StartifyFile ctermfg=14
-highlight StartifyPath ctermfg=11
+highlight link StartifyPath Comment
+highlight link StartifySlash Comment
+highlight link StartifyFile Normal
 
+hi link CocFloating CursorColumn
 " Custom Colors
 hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
-hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
+"hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 
 "-- PYTHON --
 function! AddDebugPython()
@@ -207,10 +203,26 @@ function! AddDebugRuby()
   execute "normal orequire 'pry'; binding.pry\<Esc>"
 endfunction
 
+function! AddDebugERuby()
+  execute "normal o<% require 'pry'; binding.pry %>\<Esc>"
+endfunction
+
+autocmd Filetype eruby
+  \ map <leader>d :call AddDebugERuby()<cr>
+
 autocmd Filetype ruby
   \ set colorcolumn=80,120 |
   \ nmap <leader>r :!ruby %<cr> |
   \ map <leader>d :call AddDebugRuby()<cr>
+
+" -- ELIXIR --
+function! AddDebugElixir()
+  execute "normal orequire IEx; IEx.pry\<Esc>"
+endfunction
+
+autocmd Filetype elixir
+  \ set colorcolumn=80 |
+  \ map <leader>d :call AddDebugElixir()<cr>
 
 autocmd Filetype javascript set colorcolumn=80
 
@@ -231,8 +243,9 @@ hi rubyBoolean ctermfg=9
 set rtp+=/usr/local/opt/fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
+
 command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
+  \ call fzf#vim#ag(<q-args>, '--hidden',
   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \ <bang>0)
@@ -311,7 +324,7 @@ autocmd Filetype c
 
 "-- TMUXLINE --
 let g:tmuxline_powerline_separators = 1
-let g:tmuxline_theme = 'airline'
+let g:tmuxline_theme = 'solarized'
 let g:tmuxline_preset = {
   \  'a'       : '#S',
   \  'c'       : '#{?#{==:#{pane_current_command},ssh},#[fg=yellow]#(ps -t #{pane_tty} -o args= | cut -c 5-)#[fg=default],•}',
@@ -330,3 +343,29 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
 let g:better_whitespace_enabled = 1
+
+"COC
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+let g:endwise_no_mappings = 1
+
+"fix endwise clashing with coc.nvim
+augroup vimrc-ruby-settings
+  autocmd!
+  autocmd FileType ruby imap <expr> <CR> pumvisible() ? "\<C-Y>\<Plug>DiscretionaryEnd" : "\<CR>\<Plug>DiscretionaryEnd"
+augroup END
+
+let g:csv_nomap_space = 1

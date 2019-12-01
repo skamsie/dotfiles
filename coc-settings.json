@@ -1,0 +1,13 @@
+{
+  "suggest.minTriggerInputLength": 2,
+  "suggest.snippetIndicator": ">",
+  "python.jediEnabled": false,
+  "python.pythonPath": "/Users/adimian/.pyenv/shims/python",
+  "diagnostic.enable": true,
+  "languageserver": {
+     "elixirLS": {
+      "command": "/usr/local/bin/elixir-ls/language_server.sh",
+      "filetypes": ["elixir", "eelixir"]
+     }
+  }
+}
