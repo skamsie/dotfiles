@@ -31,8 +31,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-endwise'
 Plug 'arcticicestudio/nord-vim'
 Plug 'cocopon/colorswatch.vim'
-Plug 'cocopon/iceberg.vim'
 Plug 'chrisbra/csv.vim'
+Plug 'arcticicestudio/nord-vim'
 
 " Ruby
 Plug 'vim-ruby/vim-ruby'
@@ -97,7 +97,7 @@ set wildmode=longest,list
 " disable bell
 set noerrorbells visualbell t_vb=
 
-" make sure vertical separator is a |
+" make sure vertical separator is a │
 set fillchars+=vert:│
 
 set ttimeoutlen=10
@@ -118,8 +118,6 @@ let g:solarized_visibility= "high"
 let terminal_theme = substitute(system('term-profile'), '\n\+$', '', '')
 let color_theme = split(substitute(terminal_theme, '_', ' ', ''), ' ')[0]
 execute "colorscheme ".color_theme
-
-"colorscheme nord
 
 "-- AIRLINE --
 let g:airline_theme = color_theme
@@ -324,7 +322,7 @@ autocmd Filetype c
 
 "-- TMUXLINE --
 let g:tmuxline_powerline_separators = 1
-let g:tmuxline_theme = 'solarized'
+"let g:tmuxline_theme = 'nord'
 let g:tmuxline_preset = {
   \  'a'       : '#S',
   \  'c'       : '#{?#{==:#{pane_current_command},ssh},#[fg=yellow]#(ps -t #{pane_tty} -o args= | cut -c 5-)#[fg=default],•}',
