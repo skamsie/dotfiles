@@ -114,13 +114,10 @@ set background=dark
 let g:solarized_termtrans=1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
-
-let terminal_theme = substitute(system('term-profile'), '\n\+$', '', '')
-let color_theme = split(substitute(terminal_theme, '_', ' ', ''), ' ')[0]
-execute "colorscheme ".color_theme
+colorscheme solarized
 
 "-- AIRLINE --
-let g:airline_theme = color_theme
+"let g:airline_theme = "solarized"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -348,6 +345,11 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
