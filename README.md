@@ -39,13 +39,13 @@
 
 ```bash
 # Tmux plugins manager (https://github.com/tmux-plugins/tpm)
-> git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm```
+> git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # copy tmux config
 > cp .tmux.conf ~
 
 # In a tmux session install with prefix + I
-``````
+```
 
 ## emacs
 
