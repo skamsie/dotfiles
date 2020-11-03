@@ -3,36 +3,37 @@
 
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'Rip-Rip/clang_complete'
 Plug 'airblade/vim-gitgutter'
+Plug 'altercation/vim-colors-solarized'
 Plug 'alvan/vim-closetag'
+Plug 'arcticicestudio/nord-vim'
+Plug 'chrisbra/csv.vim'
+Plug 'cocopon/colorswatch.vim'
+Plug 'easymotion/vim-easymotion'
 Plug 'janko-m/vim-test'
 Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'junegunn/vim-peekaboo'
 Plug 'majutsushi/tagbar'
 Plug 'matze/vim-move', { 'tag': 'v1.3'}
+Plug 'mhinz/vim-startify'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'python-mode/python-mode'
-Plug 'Rip-Rip/clang_complete'
 Plug 'skamsie/nnn'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'timakro/vim-searchant'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'mhinz/vim-startify'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'altercation/vim-colors-solarized'
-Plug 'timakro/vim-searchant'
-Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-endwise'
-Plug 'arcticicestudio/nord-vim'
-Plug 'cocopon/colorswatch.vim'
-Plug 'chrisbra/csv.vim'
-Plug 'arcticicestudio/nord-vim'
 
 " Ruby
 Plug 'vim-ruby/vim-ruby'
@@ -44,24 +45,28 @@ Plug 'tpope/vim-rails'
 Plug 'elixir-editors/vim-elixir'
 Plug 'slashmili/alchemist.vim'
 
-"Experimental
-"Plug 'AlessandroYorba/Sierra'
-"Plug 'metakirby5/codi.vim'
-"Plug 'ap/vim-css-color'
+" Disabled
+" Plug 'AlessandroYorba/Sierra'
+" Plug 'metakirby5/codi.vim'
+" Plug 'ap/vim-css-color'
 
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
 
 "https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
-let g:python_host_prog = $HOME . '/.pyenv/versions/neovim2/bin/python'
+let g:loaded_python_provider = 0
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 :tnoremap <Space><Esc> <C-\><C-n>
 
 "set noincsearch
 "set iskeyword+=-
+
+" Tags
 set tags+=gems.tags
+nnoremap g] g<C-]>
+
 syntax enable
 filetype plugin on
 filetype indent on
@@ -71,7 +76,7 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set nohlsearch
+"set nohlsearch
 
 " allow changing buffers without saving
 set hidden
@@ -107,17 +112,19 @@ autocmd Filetype ruby,eruby,vim,haml,cucumber,css,sass
 
 autocmd Filetype go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
-"-- COLORS --
+"-- COLOR SCHEME --
 set background=dark
 
-"let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
 colorscheme solarized
 
+" gitgutter
+"au InsertLeave * call gitgutter#process_buffer(bufnr(''), 0)
+"au TextChanged * call gitgutter#process_buffer(bufnr(''), 0)
 "-- AIRLINE --
-"let g:airline_theme = "solarized"
+
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -153,16 +160,6 @@ let g:startify_bookmarks =
   \   {'t': '~/.tmux.conf'}
   \ ]
 let g:startify_commands = [{'n': ':NNN'}]
-
-" This part has to be after the color theme was loaded
-highlight link StartifyPath Comment
-highlight link StartifySlash Comment
-highlight link StartifyFile Normal
-
-hi link CocFloating CursorColumn
-" Custom Colors
-hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
-"hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 
 "-- PYTHON --
 function! AddDebugPython()
@@ -266,18 +263,18 @@ let g:fzf_colors =
   \   'spinner': ['fg', 'Label'],
   \   'header':  ['fg', 'Comment'] }
 
+"Leader mappings
+map <Space> <leader>
+
 nmap <leader>f :FZF<cr>
 nmap <leader>b :Buffers<cr>
 nmap <leader>a :Ag<cr>
 nmap <leader>t :Tags<cr>
-
-"-- CSS-COLOR --
-nmap <leader>css :call css_color#toggle()<cr>
-
-" -- MAPS --
-map <Space> <leader>
-
+nmap <leader>h :History<cr>
 nmap <leader>s :Startify<cr>
+
+"search for character in current view
+nmap ; <Plug>(easymotion-s)
 
 "-- GOYO --
 let g:goyo_width = 100
@@ -295,7 +292,7 @@ let g:nnn_limit_topics_at = 15
 let g:nnn_browser = 'firefox'
 let g:nnn_nomodifiable = 1
 let g:nnn_default_topic_lang = 'en'
-let g:nnn_sources = 'wired, hacker-news, cnn, the-next-web, vice-news'
+let g:nnn_sources = 'wired, hacker-news, ars-technica, vice-news'
 let g:nnn_topics =
   \ [
   \   {'topic': 'machine learning'},
@@ -303,9 +300,9 @@ let g:nnn_topics =
   \   {'topic': 'politica', 'sort_by': 'popularity', 'language': 'ro'},
   \ ]
 
-function! SetNHColors()
- hi link NHTitle Constant
-endfunction`
+"function! SetNHColors()
+" hi link NHTitle Constant
+"endfunction
 
 au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
 
@@ -317,45 +314,40 @@ let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/' .
 autocmd Filetype c
   \ nmap <leader>r :! cc -Wall -std=c99 % -o vimout && ./vimout && rm vimout<CR>
 
-"-- TMUXLINE --
-let g:tmuxline_powerline_separators = 1
-"let g:tmuxline_theme = 'nord'
-let g:tmuxline_preset = {
-  \  'a'       : '#S',
-  \  'c'       : '#{?#{==:#{pane_current_command},ssh},#[fg=yellow]#(ps -t #{pane_tty} -o args= | cut -c 5-)#[fg=default],•}',
-  \  'win'     : '#I:#W#F',
-  \  'cwin'    : '#I:#W#F',
-  \  'y'       : '%H:%M',
-  \  'z'       : "#(ps -p #(${CHILD_PID}) -o comm= | cut -c 1-60) #[fg=red, bold]#(${CHILD_PID})#[fg=default]",
-  \  'options' : {'status-justify' : 'left'}}
-
 "-- OTHERS --
 let g:move_key_modifier = 'C'
+
 " resize vertical split
 noremap <c-h> <c-w><
 noremap <c-l> <c-w>>
+
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
 let g:better_whitespace_enabled = 1
 
-"COC
+" PEEKABOO
+let g:peekaboo_window = 'vert lefta 60new'
+let g:peekaboo_compact = 0
+
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
+"COC
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
+      \ pumvisible() ? '\<C-n>' :
+      \ <SID>check_back_space() ? '\<Tab>' :
       \ coc#refresh()
 
+" Tab selection in popup menus
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -365,7 +357,21 @@ let g:endwise_no_mappings = 1
 "fix endwise clashing with coc.nvim
 augroup vimrc-ruby-settings
   autocmd!
-  autocmd FileType ruby imap <expr> <CR> pumvisible() ? "\<C-Y>\<Plug>DiscretionaryEnd" : "\<CR>\<Plug>DiscretionaryEnd"
+  autocmd FileType ruby imap <expr> <CR> pumvisible() ?
+                    \ "\<C-Y>\<Plug>DiscretionaryEnd" :
+                    \ "\<CR>\<Plug>DiscretionaryEnd"
 augroup END
 
 let g:csv_nomap_space = 1
+
+" CUSTOM COLORS (keep at the end)
+hi link StartifyPath Comment
+hi link StartifySlash Comment
+hi link StartifyFile Normal
+hi link CocFloating CursorColumn
+hi link CocListBgBlue CursorColumn
+hi link NormalFloat CursorColumn
+hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
+hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
+hi SignColumn ctermbg=0 guibg=DarkRed
+hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
