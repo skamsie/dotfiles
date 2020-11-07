@@ -71,18 +71,15 @@ syntax enable
 filetype plugin on
 filetype indent on
 
-" global tab settings
 set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-"set nohlsearch
+set nohlsearch
+set noswapfile
 
 " allow changing buffers without saving
 set hidden
-
-" do not create swp files
-set noswapfile
 
 " reload file written by other program
 set autoread
@@ -235,7 +232,6 @@ hi rubyBoolean ctermfg=9
 set rtp+=/usr/local/opt/fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
-
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>, '--hidden',
   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
@@ -249,6 +245,14 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
+let g:fzf_layout =
+  \  {
+  \   'window': {
+  \     'width': 1,
+  \     'height': 0.44,
+  \     'yoffset': 1
+  \    }
+  \  }
 let g:fzf_colors =
   \ { 'fg':      ['fg', 'Normal'],
   \   'bg':      ['bg', 'Normal'],
