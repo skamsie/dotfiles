@@ -9,14 +9,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'altercation/vim-colors-solarized'
 Plug 'alvan/vim-closetag'
 Plug 'arcticicestudio/nord-vim'
-Plug 'chrisbra/csv.vim'
-Plug 'cocopon/colorswatch.vim'
-Plug 'easymotion/vim-easymotion'
 Plug 'janko-m/vim-test'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-peekaboo'
 Plug 'majutsushi/tagbar'
 Plug 'matze/vim-move', { 'tag': 'v1.3'}
 Plug 'mhinz/vim-startify'
@@ -34,6 +30,11 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'mcasper/vim-infer-debugger'
+
+" change to 'easymotion/vim-easymotion' after
+" this bug is fixed: https://github.com/easymotion/vim-easymotion/pull/440
+Plug 'jakelinnzy/vim-easymotion', { 'commit': '2912aa0' }
 
 " Ruby
 Plug 'vim-ruby/vim-ruby'
@@ -46,9 +47,11 @@ Plug 'elixir-editors/vim-elixir'
 Plug 'slashmili/alchemist.vim'
 
 " Disabled
+" Plug 'cocopon/colorswatch.vim'
 " Plug 'AlessandroYorba/Sierra'
 " Plug 'metakirby5/codi.vim'
 " Plug 'ap/vim-css-color'
+" Plug 'chrisbra/csv.vim'
 
 call plug#end()
 
@@ -77,6 +80,13 @@ set shiftwidth=2
 set softtabstop=2
 set nohlsearch
 set noswapfile
+set completeopt+=noselect
+set omnifunc=syntaxcomplete#Complete
+set completeopt-=preview
+set ttimeoutlen=10
+" colorcolumn
+autocmd Filetype ruby,python,eruby,vim,javascript
+  \ set colorcolumn=80
 
 " allow changing buffers without saving
 set hidden
@@ -102,12 +112,11 @@ set noerrorbells visualbell t_vb=
 " make sure vertical separator is a │
 set fillchars+=vert:│
 
-set ttimeoutlen=10
-
 autocmd Filetype ruby,eruby,vim,haml,cucumber,css,sass
-      \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+  \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
-autocmd Filetype go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd Filetype go
+  \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 "-- COLOR SCHEME --
 set background=dark
@@ -117,11 +126,7 @@ let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
 colorscheme solarized
 
-" gitgutter
-"au InsertLeave * call gitgutter#process_buffer(bufnr(''), 0)
-"au TextChanged * call gitgutter#process_buffer(bufnr(''), 0)
 "-- AIRLINE --
-
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -131,16 +136,12 @@ let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_section_c = '%f'
-let g:airline#extensions#tabline#buffers_label = '♡ '
+let g:airline#extensions#tabline#buffers_label = '♡'
 
 "-- NETRW --
 let g:netrw_liststyle = 3
 let g:netrw_altv = 1
 let g:netrw_localrmdir = 'rm -rf'
-
-set completeopt+=noselect
-set omnifunc=syntaxcomplete#Complete
-set completeopt-=preview
 
 "-- STARTIFY --
 let g:startify_change_to_dir = 0
@@ -158,27 +159,7 @@ let g:startify_bookmarks =
   \ ]
 let g:startify_commands = [{'n': ':NNN'}]
 
-"-- PYTHON --
-function! AddDebugPython()
-  execute "normal oimport ipdb; ipdb.set_trace()\<Esc>"
-endfunction
-
-autocmd Filetype python
-  \ set colorcolumn=100 |
-  \ map <leader>d :call AddDebugPython()<cr>
-
-let g:pymode_breakpoint = 0
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope_regenerate_on_write = 0
-let g:pymode_folding = 0
-let g:pymode_options_colorcolumn = 0
-let g:pymode_rope_complete_on_dot = 0
-let g:pymode_rope_goto_definition_cmd = 'e'
-let g:pymode_lint_checkers = ['pyflakes']
-let g:pymode_rope_goto_definition_bind = 'gd'
-let g:pymode_options = 0
-let g:pymode_lint = 0
-
+" VIM-TEST
 let test#python#runner = 'nose'
 let test#python#nose#options = '--verbose --nocapture'
 let test#strategy = 'neovim'
@@ -188,32 +169,6 @@ let test#strategy = 'neovim'
 " install rbenv ctags: https://github.com/tpope/rbenv-ctags
 " install gem-ctags: gem install gem-ctags
 " generate tags in the project dir with: ctags -R .
-function! AddDebugRuby()
-  execute "normal orequire 'pry'; binding.pry\<Esc>"
-endfunction
-
-function! AddDebugERuby()
-  execute "normal o<% require 'pry'; binding.pry %>\<Esc>"
-endfunction
-
-autocmd Filetype eruby
-  \ map <leader>d :call AddDebugERuby()<cr>
-
-autocmd Filetype ruby
-  \ set colorcolumn=80,120 |
-  \ nmap <leader>r :!ruby %<cr> |
-  \ map <leader>d :call AddDebugRuby()<cr>
-
-" -- ELIXIR --
-function! AddDebugElixir()
-  execute "normal orequire IEx; IEx.pry\<Esc>"
-endfunction
-
-autocmd Filetype elixir
-  \ set colorcolumn=80 |
-  \ map <leader>d :call AddDebugElixir()<cr>
-
-autocmd Filetype javascript set colorcolumn=80
 
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_load_gemfile = 1
@@ -277,9 +232,6 @@ nmap <leader>t :Tags<cr>
 nmap <leader>h :History<cr>
 nmap <leader>s :Startify<cr>
 
-"search for character in current view
-nmap ; <Plug>(easymotion-s)
-
 "-- GOYO --
 let g:goyo_width = 100
 let g:goyo_height = "80%"
@@ -304,10 +256,6 @@ let g:nnn_topics =
   \   {'topic': 'politica', 'sort_by': 'popularity', 'language': 'ro'},
   \ ]
 
-"function! SetNHColors()
-" hi link NHTitle Constant
-"endfunction
-
 au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
 
 " -- C --
@@ -329,10 +277,6 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
 let g:better_whitespace_enabled = 1
-
-" PEEKABOO
-let g:peekaboo_window = 'vert lefta 60new'
-let g:peekaboo_compact = 0
 
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
@@ -366,8 +310,6 @@ augroup vimrc-ruby-settings
                     \ "\<CR>\<Plug>DiscretionaryEnd"
 augroup END
 
-let g:csv_nomap_space = 1
-
 " CUSTOM COLORS (keep at the end)
 hi link StartifyPath Comment
 hi link StartifySlash Comment
@@ -379,3 +321,15 @@ hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
 hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 hi SignColumn ctermbg=0 guibg=DarkRed
 hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
+
+nmap <Leader>d :call AddDebugger("o")<cr>
+
+let g:yb_yank_registers = ["x", "y", "z"]
+let g:yb_clip_registers = ["j", "k", "l"]
+let g:sneak#label = 1
+
+nmap ; <Plug>(easymotion-s)
+
+" Disable Linter while easy motion is active
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd   silent! CocEnable
