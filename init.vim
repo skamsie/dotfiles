@@ -3,24 +3,22 @@
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'Rip-Rip/clang_complete'
-Plug 'airblade/vim-gitgutter'
 Plug 'altercation/vim-colors-solarized'
-Plug 'alvan/vim-closetag'
-Plug 'arcticicestudio/nord-vim'
-Plug 'janko-m/vim-test'
-Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'majutsushi/tagbar'
-Plug 'matze/vim-move', { 'tag': 'v1.3'}
 Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'timakro/vim-searchant'
+Plug 'skamsie/vim-yank-bank'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'alvan/vim-closetag'
+Plug 'janko-m/vim-test'
+Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/goyo.vim'
+Plug 'majutsushi/tagbar'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'skamsie/nnn'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'timakro/vim-searchant'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
 Plug 'tpope/vim-endwise'
@@ -32,32 +30,22 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mcasper/vim-infer-debugger'
 
-" change to 'easymotion/vim-easymotion' after
-" this bug is fixed: https://github.com/easymotion/vim-easymotion/pull/440
+" change to 'easymotion/vim-easymotion' after this bug is fixed
+" https://github.com/easymotion/vim-easymotion/issues/402
+" PR with fix: https://github.com/easymotion/vim-easymotion/pull/440
 Plug 'jakelinnzy/vim-easymotion', { 'commit': '2912aa0' }
 
-" Ruby
+" -- RUBY --
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-rails'
 
-" Elixir
-Plug 'elixir-editors/vim-elixir'
-Plug 'slashmili/alchemist.vim'
-
-" Disabled
-" Plug 'cocopon/colorswatch.vim'
-" Plug 'AlessandroYorba/Sierra'
-" Plug 'metakirby5/codi.vim'
-" Plug 'ap/vim-css-color'
-" Plug 'chrisbra/csv.vim'
-
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
 
-"https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
+""https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 let g:loaded_python_provider = 0
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
@@ -126,7 +114,7 @@ let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
 colorscheme solarized
 
-"-- AIRLINE --
+""-- AIRLINE --
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -178,51 +166,44 @@ let ruby_operators = 1
 let ruby_space_errors = 1
 let ruby_no_expensive = 1
 
-"Overwriting some of the vim-ruby colors
-hi rubyPseudoVariable ctermfg=9
-hi rubyBoolean ctermfg=9
-
 " -- FZF --
-"It needs fzf and ag command line tools
+" Also install with brew: fzf, ag, rg
 set rtp+=/usr/local/opt/fzf
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
+let s:fzf_options = {'options': '--delimiter : --nth 4..'}
 
 command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>, '--hidden',
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \ <bang>0)
+      \ call fzf#vim#ag(<q-args>,
+      \ '--hidden', <bang>0 ?
+      \ fzf#vim#with_preview(s:fzf_options, 'up:60%')
+      \ : fzf#vim#with_preview(s:fzf_options, 'right:50%:hidden', '?'),
+      \ <bang>0)
 
 command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
+      \ call fzf#vim#grep(
+      \ 'rg --column --line-number --no-heading ' .
+      \ shellescape(<q-args>), 1, <bang>0 ?
+      \ fzf#vim#with_preview(s:fzf_options, 'up:60%')
+      \ : fzf#vim#with_preview(s:fzf_options, 'right:50%:hidden', '?'), <bang>0)
 
 let g:fzf_layout =
-  \  {
-  \   'window': {
-  \     'width': 1,
-  \     'height': 0.44,
-  \     'yoffset': 1
-  \    }
-  \  }
-let g:fzf_colors =
-  \ { 'fg':      ['fg', 'Normal'],
-  \   'bg':      ['bg', 'Normal'],
-  \   'hl':      ['fg', 'Comment'],
-  \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \   'hl+':     ['fg', 'Statement'],
-  \   'info':    ['fg', 'PreProc'],
-  \   'prompt':  ['fg', 'Conditional'],
-  \   'pointer': ['fg', 'Exception'],
-  \   'marker':  ['fg', 'Keyword'],
-  \   'spinner': ['fg', 'Label'],
-  \   'header':  ['fg', 'Comment'] }
+      \ { 'window': { 'width': 1, 'height': 0.44, 'yoffset': 1 } }
 
-"Leader mappings
+let g:fzf_colors =
+      \ { 'fg':      ['fg', 'Normal'],
+      \   'bg':      ['bg', 'Normal'],
+      \   'hl':      ['fg', 'Comment'],
+      \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+      \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+      \   'hl+':     ['fg', 'Statement'],
+      \   'info':    ['fg', 'PreProc'],
+      \   'prompt':  ['fg', 'Conditional'],
+      \   'pointer': ['fg', 'Exception'],
+      \   'marker':  ['fg', 'Keyword'],
+      \   'spinner': ['fg', 'Label'],
+      \   'header':  ['fg', 'Comment'] }
+
+""Leader mappings
 map <Space> <leader>
 
 nmap <leader>f :FZF<cr>
@@ -231,8 +212,10 @@ nmap <leader>a :Ag<cr>
 nmap <leader>t :Tags<cr>
 nmap <leader>h :History<cr>
 nmap <leader>s :Startify<cr>
+nmap <leader>d :call AddDebugger("o")<cr>
+nmap <leader>; <Plug>(easymotion-s)
 
-"-- GOYO --
+""-- GOYO --
 let g:goyo_width = 100
 let g:goyo_height = "80%"
 
@@ -243,7 +226,7 @@ endfunction
 
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-"-- NNN ---
+" -- NNN ---
 let g:nnn_limit_topics_at = 15
 let g:nnn_browser = 'firefox'
 let g:nnn_nomodifiable = 1
@@ -257,17 +240,6 @@ let g:nnn_topics =
   \ ]
 
 au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
-
-" -- C --
-" Path to clang on OSX High Sierra
-let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/' .
-  \ 'Toolchains/XcodeDefault.xctoolchain/usr/lib'
-
-autocmd Filetype c
-  \ nmap <leader>r :! cc -Wall -std=c99 % -o vimout && ./vimout && rm vimout<CR>
-
-"-- OTHERS --
-let g:move_key_modifier = 'C'
 
 " resize vertical split
 noremap <c-h> <c-w><
@@ -311,6 +283,8 @@ augroup vimrc-ruby-settings
 augroup END
 
 " CUSTOM COLORS (keep at the end)
+hi rubyPseudoVariable ctermfg=9
+hi rubyBoolean ctermfg=9
 hi link StartifyPath Comment
 hi link StartifySlash Comment
 hi link StartifyFile Normal
@@ -322,14 +296,9 @@ hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 hi SignColumn ctermbg=0 guibg=DarkRed
 hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
 
-nmap <Leader>d :call AddDebugger("o")<cr>
-
-let g:yb_yank_registers = ["x", "y", "z"]
+let g:yb_yank_registers = ["a", "s", "d"]
 let g:yb_clip_registers = ["j", "k", "l"]
-let g:sneak#label = 1
 
-nmap ; <Plug>(easymotion-s)
-
-" Disable Linter while easy motion is active
+" Disable Coc Linter while easy motion is active
 autocmd User EasyMotionPromptBegin silent! CocDisable
-autocmd User EasyMotionPromptEnd   silent! CocEnable
+autocmd User EasyMotionPromptEnd silent! CocEnable
