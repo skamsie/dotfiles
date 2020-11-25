@@ -29,7 +29,7 @@
 > nvim -c ":silent PlugInstall | qa"
 
 # install coc extensions https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
-> nvim -c 'CocInstall -sync coc-json coc-html coc-vimlsp coc-prettier coc-solargraph coc-python coc-css| q'
+> nvim -c 'CocInstall -sync coc-json coc-html coc-vimlsp coc-solargraph coc-python coc-css| q'
 
 # copy custom solarized airline theme
 > cp solarized_patched.vim ~/.local/share/nvim/plugged/vim-airline-themes/autoload/airline/themes/solarized.vim
