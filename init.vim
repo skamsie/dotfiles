@@ -18,7 +18,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'skamsie/nnn'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-cucumber'
 Plug 'tpope/vim-endwise'
@@ -109,7 +109,7 @@ autocmd Filetype go
 "-- COLOR SCHEME --
 set background=dark
 
-let g:solarized_termtrans=1
+let g:solarized_termtrans = 1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
 colorscheme solarized
@@ -127,8 +127,9 @@ let g:airline_section_c = '%f'
 let g:airline#extensions#tabline#buffers_label = '♡'
 
 "-- NETRW --
+let g:netrw_preview = 1
 let g:netrw_liststyle = 3
-let g:netrw_altv = 1
+let g:netrw_winsize = 33
 let g:netrw_localrmdir = 'rm -rf'
 
 "-- STARTIFY --
@@ -244,6 +245,8 @@ au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
 " resize vertical split
 noremap <c-h> <c-w><
 noremap <c-l> <c-w>>
+autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
+
 
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
@@ -282,6 +285,19 @@ augroup vimrc-ruby-settings
                     \ "\<CR>\<Plug>DiscretionaryEnd"
 augroup END
 
+let g:yb_yank_registers = ["a", "s", "d"]
+let g:yb_clip_registers = ["j", "k", "l"]
+
+" Disable Coc Linter while easy motion is active
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd silent! CocEnable
+
+" Gitgutter
+autocmd BufWritePost * call gitgutter#process_buffer(bufnr(''), 0)
+"au InsertLeave * call gitgutter#process_buffer(bufnr(''), 0)
+"au TextChanged * call gitgutter#process_buffer(bufnr(''), 0)
+let g:gitgutter_async=0
+
 " CUSTOM COLORS (keep at the end)
 hi rubyPseudoVariable ctermfg=9
 hi rubyBoolean ctermfg=9
@@ -295,10 +311,3 @@ hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
 hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 hi SignColumn ctermbg=0 guibg=DarkRed
 hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
-
-let g:yb_yank_registers = ["a", "s", "d"]
-let g:yb_clip_registers = ["j", "k", "l"]
-
-" Disable Coc Linter while easy motion is active
-autocmd User EasyMotionPromptBegin silent! CocDisable
-autocmd User EasyMotionPromptEnd silent! CocEnable
