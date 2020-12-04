@@ -9,7 +9,6 @@ Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'timakro/vim-searchant'
 Plug 'skamsie/vim-yank-bank'
-Plug 'AndrewRadev/splitjoin.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'alvan/vim-closetag'
 Plug 'janko-m/vim-test'
@@ -18,9 +17,6 @@ Plug 'junegunn/goyo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'skamsie/nnn'
-Plug 'mg979/vim-visual-multi'
-Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-cucumber'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -29,6 +25,7 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mcasper/vim-infer-debugger'
+Plug 'skamsie/vim-freestyle'
 
 " change to 'easymotion/vim-easymotion' after this bug is fixed
 " https://github.com/easymotion/vim-easymotion/issues/402
@@ -45,14 +42,19 @@ call plug#end()
 
 "-- NEOVIM SPECIFIC--
 
-""https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
+"https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 let g:loaded_python_provider = 0
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 :tnoremap <Space><Esc> <C-\><C-n>
 
-"set noincsearch
-"set iskeyword+=-
+set incsearch
+
+augroup vimrc-incsearch-highlight
+  autocmd!
+  autocmd CmdlineEnter /,\? :set hlsearch
+  autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
 
 " Tags
 set tags+=gems.tags
@@ -74,7 +76,7 @@ set completeopt-=preview
 set ttimeoutlen=10
 " colorcolumn
 autocmd Filetype ruby,python,eruby,vim,javascript
-  \ set colorcolumn=80
+      \ set colorcolumn=80
 
 " allow changing buffers without saving
 set hidden
@@ -101,10 +103,10 @@ set noerrorbells visualbell t_vb=
 set fillchars+=vert:│
 
 autocmd Filetype ruby,eruby,vim,haml,cucumber,css,sass
-  \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+      \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 autocmd Filetype go
-  \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+      \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 "-- COLOR SCHEME --
 set background=dark
@@ -139,13 +141,13 @@ let g:startify_update_oldfiles = 1
 let g:startify_custom_header = ['      ' . getcwd()]
 let g:startify_files_number = 10
 let g:startify_bookmarks =
-  \ [
-  \   {'a': '.'},
-  \   {'c': '~/.vimrc'},
-  \   {'l': '~/.zshrc'},
-  \   {'f': '~/.config/nvim/init.vim'},
-  \   {'t': '~/.tmux.conf'}
-  \ ]
+      \ [
+      \   {'a': '.'},
+      \   {'c': '~/.vimrc'},
+      \   {'l': '~/.zshrc'},
+      \   {'f': '~/.config/nvim/init.vim'},
+      \   {'t': '~/.tmux.conf'}
+      \ ]
 let g:startify_commands = [{'n': ':NNN'}]
 
 " VIM-TEST
@@ -234,11 +236,11 @@ let g:nnn_nomodifiable = 1
 let g:nnn_default_topic_lang = 'en'
 let g:nnn_sources = 'wired, hacker-news, ars-technica, vice-news'
 let g:nnn_topics =
-  \ [
-  \   {'topic': 'machine learning'},
-  \   {'topic': 'berlin', 'sort_by': 'popularity', 'language': 'de'},
-  \   {'topic': 'politica', 'sort_by': 'popularity', 'language': 'ro'},
-  \ ]
+      \ [
+      \   {'topic': 'machine learning'},
+      \   {'topic': 'berlin', 'sort_by': 'popularity', 'language': 'de'},
+      \   {'topic': 'politica', 'sort_by': 'popularity', 'language': 'ro'},
+      \ ]
 
 au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
 
@@ -247,10 +249,10 @@ noremap <c-h> <c-w><
 noremap <c-l> <c-w>>
 autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
 
-
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
+let g:searchant_map_stop = 0
 let g:better_whitespace_enabled = 1
 
 " use <tab> for trigger completion and navigate to the next complete item
@@ -281,21 +283,17 @@ let g:endwise_no_mappings = 1
 augroup vimrc-ruby-settings
   autocmd!
   autocmd FileType ruby imap <expr> <CR> pumvisible() ?
-                    \ "\<C-Y>\<Plug>DiscretionaryEnd" :
-                    \ "\<CR>\<Plug>DiscretionaryEnd"
+        \ "\<C-Y>\<Plug>DiscretionaryEnd" :
+        \ "\<CR>\<Plug>DiscretionaryEnd"
 augroup END
 
-let g:yb_yank_registers = ["a", "s", "d"]
-let g:yb_clip_registers = ["j", "k", "l"]
+let g:yb_yank_registers = ["j", "k", "l"]
+let g:yb_clip_registers = ["x", "y", "z"]
 
-" Disable Coc Linter while easy motion is active
-autocmd User EasyMotionPromptBegin silent! CocDisable
-autocmd User EasyMotionPromptEnd silent! CocEnable
-
-" Gitgutter
-autocmd BufWritePost * call gitgutter#process_buffer(bufnr(''), 0)
+" gitgutter
 "au InsertLeave * call gitgutter#process_buffer(bufnr(''), 0)
 "au TextChanged * call gitgutter#process_buffer(bufnr(''), 0)
+autocmd BufWritePost * call gitgutter#process_buffer(bufnr(''), 0)
 let g:gitgutter_async=0
 
 " CUSTOM COLORS (keep at the end)
@@ -311,3 +309,16 @@ hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
 hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 hi SignColumn ctermbg=0 guibg=DarkRed
 hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
+hi EasyMotionTarget2First ctermbg=none ctermfg=red
+hi EasyMotionTarget2Second ctermbg=none ctermfg=red
+
+" Disable Coc Linter while easy motion is active
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd silent! CocEnable
+
+let g:freestyle_settings = { 'no_maps': 1 }
+map <C-j> <Plug>FreestyleToggleCursors
+map <C-k> <Plug>FreestyleRun
+
+map <expr> <C-c> exists('w:freestyle_data') ?
+      \ "\<Plug>FreestyleClear" : "\<Plug>SearchantStop"
