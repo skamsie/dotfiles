@@ -1,18 +1,16 @@
 " https://github.com/junegunn/vim-plug
 " -- PLUGINS --
-
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'altercation/vim-colors-solarized'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'timakro/vim-searchant'
 Plug 'skamsie/vim-yank-bank'
-Plug 'airblade/vim-gitgutter'
 Plug 'alvan/vim-closetag'
 Plug 'janko-m/vim-test'
-Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/goyo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'ntpeters/vim-better-whitespace'
@@ -20,112 +18,95 @@ Plug 'skamsie/nnn'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'mcasper/vim-infer-debugger'
 Plug 'skamsie/vim-freestyle'
-
-" change to 'easymotion/vim-easymotion' after this bug is fixed
-" https://github.com/easymotion/vim-easymotion/issues/402
-" PR with fix: https://github.com/easymotion/vim-easymotion/pull/440
-Plug 'jakelinnzy/vim-easymotion', { 'commit': '2912aa0' }
-
-" -- RUBY --
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-rake'
-Plug 'tpope/vim-bundler'
+Plug 'jiangmiao/auto-pairs'
+Plug 'skamsie/vim-lineletters'
+Plug 'easymotion/vim-easymotion'
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-rails'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'antoinemadec/FixCursorHold.nvim'
 
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
-
 "https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 let g:loaded_python_provider = 0
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
-:tnoremap <Space><Esc> <C-\><C-n>
+" -- Misc --
+syntax enable
+filetype plugin on
+filetype indent on
+set tags+=gems.tags
+set noswapfile
+set completeopt+=noselect
+set completeopt-=preview
+set omnifunc=syntaxcomplete#Complete
+set ttimeoutlen=10
+set updatetime=500
+set noerrorbells visualbell t_vb=
+" do not show typed chars under statusline
+set noshowcmd
+" allow changing buffers without saving
+set hidden
+" reload file written by other program
+set autoread
+" enable backspace in insert mode
+set backspace=indent,eol,start
+" always show status line
+set laststatus=2
+" make sure vertical separator is a │
+set fillchars+=vert:│
+" yank and paste with the system clipboard
+set clipboard=unnamed
+" better completion for tab select on files
+set wildmode=longest,list
+set wildoptions=pum,tagfile
 
+" -- Indentation --
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+autocmd Filetype
+      \ ruby,eruby,vim,haml,cucumber,css,sass
+      \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd Filetype go
+      \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+" -- Search Highlight --
 set incsearch
-
+set nohlsearch
 augroup vimrc-incsearch-highlight
   autocmd!
   autocmd CmdlineEnter /,\? :set hlsearch
   autocmd CmdlineLeave /,\? :set nohlsearch
 augroup END
 
-" Tags
-set tags+=gems.tags
-nnoremap g] g<C-]>
-
-syntax enable
-filetype plugin on
-filetype indent on
-
-set expandtab
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set nohlsearch
-set noswapfile
-set completeopt+=noselect
-set omnifunc=syntaxcomplete#Complete
-set completeopt-=preview
-set ttimeoutlen=10
 " colorcolumn
 autocmd Filetype ruby,python,eruby,vim,javascript
       \ set colorcolumn=80
 
-" allow changing buffers without saving
-set hidden
-
-" reload file written by other program
-set autoread
-
-" enable backspace in insert mode
-set backspace=indent,eol,start
-
-" always show status bar
-set laststatus=2
-
-" yank and paste with the system clipboard
-set clipboard=unnamed
-
-" better completion for tab select on files
-set wildmode=longest,list
-
-" disable bell
-set noerrorbells visualbell t_vb=
-
-" make sure vertical separator is a │
-set fillchars+=vert:│
-
-autocmd Filetype ruby,eruby,vim,haml,cucumber,css,sass
-      \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-
-autocmd Filetype go
-      \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
-
-"-- COLOR SCHEME --
+"-- Colorscheme --
 set background=dark
-
 let g:solarized_termtrans = 1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
 colorscheme solarized
 
-""-- AIRLINE --
-let g:airline#extensions#tabline#enabled = 1
+"-- AIRLINE --
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#show_tabs = 0
 let g:airline_extensions = ['tabline', 'whitespace']
-let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_section_c = '%f'
+let g:airline_section_z = '%-4(%l/%c%) %p%% [%L]'
 let g:airline#extensions#tabline#buffers_label = '♡'
 
 "-- NETRW --
@@ -150,24 +131,20 @@ let g:startify_bookmarks =
       \ ]
 let g:startify_commands = [{'n': ':NNN'}]
 
-" VIM-TEST
+" -- VIM-TEST --
 let test#python#runner = 'nose'
 let test#python#nose#options = '--verbose --nocapture'
 let test#strategy = 'neovim'
 
-" -- RUBY --
+" -- Ruby --
 " install ctags: brew install ctags
 " install rbenv ctags: https://github.com/tpope/rbenv-ctags
 " install gem-ctags: gem install gem-ctags
-" generate tags in the project dir with: ctags -R .
+" generate tags in the project dir with:
+"   ctags -R . && gem ctags && rbenv ctags
 
-let g:rubycomplete_buffer_loading = 1
-let g:rubycomplete_load_gemfile = 1
-let g:rubycomplete_classes_in_global = 1
-let g:rubycomplete_rails = 1
 let ruby_operators = 1
 let ruby_space_errors = 1
-let ruby_no_expensive = 1
 
 " -- FZF --
 " Also install with brew: fzf, ag, rg
@@ -177,7 +154,7 @@ let s:fzf_options = {'options': '--delimiter : --nth 4..'}
 
 command! -bang -nargs=* Ag
       \ call fzf#vim#ag(<q-args>,
-      \ '--hidden', <bang>0 ?
+      \ '--hidden --ignore .git', <bang>0 ?
       \ fzf#vim#with_preview(s:fzf_options, 'up:60%')
       \ : fzf#vim#with_preview(s:fzf_options, 'right:50%:hidden', '?'),
       \ <bang>0)
@@ -195,7 +172,7 @@ let g:fzf_layout =
 let g:fzf_colors =
       \ { 'fg':      ['fg', 'Normal'],
       \   'bg':      ['bg', 'Normal'],
-      \   'hl':      ['fg', 'Comment'],
+      \   'hl':      ['fg', 'Directory'],
       \   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
       \   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
       \   'hl+':     ['fg', 'Statement'],
@@ -206,19 +183,7 @@ let g:fzf_colors =
       \   'spinner': ['fg', 'Label'],
       \   'header':  ['fg', 'Comment'] }
 
-""Leader mappings
-map <Space> <leader>
-
-nmap <leader>f :FZF<cr>
-nmap <leader>b :Buffers<cr>
-nmap <leader>a :Ag<cr>
-nmap <leader>t :Tags<cr>
-nmap <leader>h :History<cr>
-nmap <leader>s :Startify<cr>
-nmap <leader>d :call AddDebugger("o")<cr>
-nmap <leader>; <Plug>(easymotion-s)
-
-""-- GOYO --
+" -- GOYO --
 let g:goyo_width = 100
 let g:goyo_height = "80%"
 
@@ -244,33 +209,30 @@ let g:nnn_topics =
 
 au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
 
-" resize vertical split
-noremap <c-h> <c-w><
-noremap <c-l> <c-w>>
-autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
-
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
 let g:searchant_map_stop = 0
 let g:better_whitespace_enabled = 1
 
+" -- COC --
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-"COC
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? '\<C-n>' :
+      \ <SID>check_back_space() ? '\<Tab>' :
+      \ coc#refresh()
+
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? '\<C-n>' :
-      \ <SID>check_back_space() ? '\<Tab>' :
-      \ coc#refresh()
+let g:coc_global_extensions = ['coc-solargraph']
 
 " Tab selection in popup menus
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -290,28 +252,6 @@ augroup END
 let g:yb_yank_registers = ["j", "k", "l"]
 let g:yb_clip_registers = ["x", "y", "z"]
 
-" gitgutter
-"au InsertLeave * call gitgutter#process_buffer(bufnr(''), 0)
-"au TextChanged * call gitgutter#process_buffer(bufnr(''), 0)
-autocmd BufWritePost * call gitgutter#process_buffer(bufnr(''), 0)
-let g:gitgutter_async=0
-
-" CUSTOM COLORS (keep at the end)
-hi rubyPseudoVariable ctermfg=9
-hi rubyBoolean ctermfg=9
-hi link StartifyPath Comment
-hi link StartifySlash Comment
-hi link StartifyFile Normal
-hi link CocFloating CursorColumn
-hi link CocListBgBlue CursorColumn
-hi link NormalFloat CursorColumn
-hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
-hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
-hi SignColumn ctermbg=0 guibg=DarkRed
-hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
-hi EasyMotionTarget2First ctermbg=none ctermfg=red
-hi EasyMotionTarget2Second ctermbg=none ctermfg=red
-
 " Disable Coc Linter while easy motion is active
 autocmd User EasyMotionPromptBegin silent! CocDisable
 autocmd User EasyMotionPromptEnd silent! CocEnable
@@ -322,3 +262,80 @@ map <C-k> <Plug>FreestyleRun
 
 map <expr> <C-c> exists('w:freestyle_data') ?
       \ "\<Plug>FreestyleClear" : "\<Plug>SearchantStop"
+
+" zoom on current window
+function! s:zoom()
+  if tabpagewinnr(tabpagenr(), '$') > 1
+    tab split
+  elseif tabpagenr('$') > 1
+    if tabpagenr() < tabpagenr('$')
+      tabclose
+      tabprevious
+    else
+      tabclose
+    endif
+  endif
+endfunction
+
+" -- MAPPINGS --
+" Resize vertical split
+noremap <c-h> <c-w><
+noremap <c-l> <c-w>>
+autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
+
+" Leader
+map <Space> <leader>
+nmap <leader>f :FZF<cr>
+nmap <leader>b :Buffers<cr>
+nmap <leader>a :Ag<cr>
+nmap <leader>t :Tags<cr>
+nmap <leader>h :History<cr>
+nmap <leader>s :Startify<cr>
+nmap <leader>d :call AddDebugger("o")<cr>
+nmap <leader>; <Plug>(easymotion-s)
+nmap <silent><leader>z :call <SID>zoom()<cr>
+
+" Others
+tnoremap <Space><Esc> <C-\><C-n>
+nnoremap g] g<C-]>
+
+" -- SIGNIFY --
+let g:signify_sign_delete = '-'
+let g:signify_sign_delete_first_line = '-'
+let g:signify_sign_change = '~'
+let g:signify_sign_show_count = 0
+
+" -- LINELETTERS --
+let g:lineletters_settings = {
+      \ 'highlight_group': 'MoreMsg',
+      \ 'prefix_chars': [',', ';', 'j']
+      \ }
+map <silent>, <Plug>LineLetters
+
+" CUSTOM COLORS (keep at the end)
+hi rubyPseudoVariable ctermfg=9
+hi rubyBoolean ctermfg=1
+hi rubyDefine cterm=NONE ctermfg=2
+hi Comment cterm=italic
+hi StartifyPath ctermfg=11
+hi StartifySlash ctermfg=11
+hi link StartifyFile Normal
+hi link CocFloating CursorColumn
+hi link CocListBgBlue CursorColumn
+hi link NormalFloat CursorColumn
+hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
+hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
+hi! link SignColumn LineNr
+hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
+hi EasyMotionTarget2First ctermbg=none ctermfg=red
+hi EasyMotionTarget2Second ctermbg=none ctermfg=red
+hi TabLine cterm=NONE
+hi TabLineSel cterm=reverse
+hi Visual cterm=reverse ctermfg=11 ctermbg=0
+hi MatchParen ctermbg=NONE cterm=italic ctermfg=1
+hi SignifySignDelete ctermfg=9 ctermbg=0
+hi SignifySignDeleteFirstLine ctermfg=9 ctermbg=0
+
+" Remove this after this bug is fixed:
+" https://github.com/vim-airline/vim-airline/issues/2307
+autocmd BufEnter * set scroll=5
