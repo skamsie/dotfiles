@@ -28,7 +28,6 @@ Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-rails'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'antoinemadec/FixCursorHold.nvim'
 
 call plug#end()
 
@@ -37,10 +36,11 @@ call plug#end()
 let g:loaded_python_provider = 0
 let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
-" -- Misc --
+"-- SETTINGS --
 syntax enable
 filetype plugin on
 filetype indent on
+set matchpairs+=<:>
 set tags+=gems.tags
 set noswapfile
 set completeopt+=noselect
@@ -49,6 +49,7 @@ set omnifunc=syntaxcomplete#Complete
 set ttimeoutlen=10
 set updatetime=500
 set noerrorbells visualbell t_vb=
+set colorcolumn=80
 " do not show typed chars under statusline
 set noshowcmd
 " allow changing buffers without saving
@@ -66,32 +67,16 @@ set clipboard=unnamed
 " better completion for tab select on files
 set wildmode=longest,list
 set wildoptions=pum,tagfile
-
-" -- Indentation --
+" indentation
 set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-autocmd Filetype
-      \ ruby,eruby,vim,haml,cucumber,css,sass
-      \ setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-autocmd Filetype go
-      \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
-
-" -- Search Highlight --
+" search highlight
 set incsearch
 set nohlsearch
-augroup vimrc-incsearch-highlight
-  autocmd!
-  autocmd CmdlineEnter /,\? :set hlsearch
-  autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
 
-" colorcolumn
-autocmd Filetype ruby,python,eruby,vim,javascript
-      \ set colorcolumn=80
-
-"-- Colorscheme --
+"-- COLORSCHEME --
 set background=dark
 let g:solarized_termtrans = 1
 let g:solarized_contrast = "high"
@@ -136,13 +121,12 @@ let test#python#runner = 'nose'
 let test#python#nose#options = '--verbose --nocapture'
 let test#strategy = 'neovim'
 
-" -- Ruby --
+" -- RUBY --
 " install ctags: brew install ctags
 " install rbenv ctags: https://github.com/tpope/rbenv-ctags
 " install gem-ctags: gem install gem-ctags
 " generate tags in the project dir with:
 "   ctags -R . && gem ctags && rbenv ctags
-
 let ruby_operators = 1
 let ruby_space_errors = 1
 
@@ -191,7 +175,6 @@ function! s:goyo_leave()
   set fillchars+=vert:│
   hi VertSplit ctermbg=NONE guibg=NONE
 endfunction
-
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " -- NNN ---
@@ -209,59 +192,75 @@ let g:nnn_topics =
 
 au! BufEnter,ColorScheme *.news-headlines call SetNHColors()
 
-let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
-let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
-let g:searchant_all = 0
-let g:searchant_map_stop = 0
-let g:better_whitespace_enabled = 1
+" -- YANK BANK --
+let g:yb_yank_registers = ["j", "k", "l"]
+let g:yb_clip_registers = ["x", "y", "z"]
 
 " -- COC --
-" use <tab> for trigger completion and navigate to the next complete item
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? '\<C-n>' :
-      \ <SID>check_back_space() ? '\<Tab>' :
-      \ coc#refresh()
-
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-let g:coc_global_extensions = ['coc-solargraph']
+let g:coc_global_extensions = [
+      \ 'coc-solargraph',
+      \ 'coc-vimlsp',
+      \ 'coc-solargraph',
+      \ 'coc-html',
+      \ 'coc-css',
+      \ 'coc-clangd'
+      \ ]
 
-" Tab selection in popup menus
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-let g:endwise_no_mappings = 1
-
-"fix endwise clashing with coc.nvim
-augroup vimrc-ruby-settings
-  autocmd!
-  autocmd FileType ruby imap <expr> <CR> pumvisible() ?
-        \ "\<C-Y>\<Plug>DiscretionaryEnd" :
-        \ "\<CR>\<Plug>DiscretionaryEnd"
-augroup END
-
-let g:yb_yank_registers = ["j", "k", "l"]
-let g:yb_clip_registers = ["x", "y", "z"]
-
-" Disable Coc Linter while easy motion is active
-autocmd User EasyMotionPromptBegin silent! CocDisable
-autocmd User EasyMotionPromptEnd silent! CocEnable
-
+" -- FREESTYLE --
 let g:freestyle_settings = { 'no_maps': 1 }
 map <C-j> <Plug>FreestyleToggleCursors
 map <C-k> <Plug>FreestyleRun
-
 map <expr> <C-c> exists('w:freestyle_data') ?
       \ "\<Plug>FreestyleClear" : "\<Plug>SearchantStop"
+
+" -- MAPPINGS --
+" Resize vertical split
+noremap <c-h> <c-w><
+noremap <c-l> <c-w>>
+autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
+
+" Leader
+map <Space> <leader>
+nmap <leader>; <Plug>(easymotion-s)
+nmap <leader>a :Ag<cr>
+nmap <leader>b :Buffers<cr>
+nmap <leader>d :call AddDebugger("o")<cr>
+nmap <leader>f :FZF<cr>
+nmap <leader>h :History<cr>
+nmap <leader>s :Startify<cr>
+nmap <leader>t :Tags<cr>
+nmap <silent><leader>z :call <SID>zoom()<cr>
+autocmd Filetype c nmap <leader>r
+      \ :terminal gcc -Wall -std=c99 % -o out && ./out && rm out<CR>
+
+" Others
+tnoremap <C-\> <C-\><C-n>
+nnoremap g] g<C-]>
+
+" -- SIGNIFY --
+let g:signify_sign_delete = '-'
+let g:signify_sign_delete_first_line = '-'
+let g:signify_sign_change = '~'
+let g:signify_sign_show_count = 0
+autocmd User SignifyAutocmds autocmd! signify FocusGained
+
+"-- LINELETTERS --
+let g:lineletters_settings = {
+      \ 'highlight_group': 'MoreMsg',
+      \ 'prefix_chars': [',', ';', 'j']
+      \ }
+map <silent>, <Plug>LineLetters
+
+"-- MISC --
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
+let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
+let g:searchant_all = 0
+let g:searchant_map_stop = 0
 
 " zoom on current window
 function! s:zoom()
@@ -277,42 +276,7 @@ function! s:zoom()
   endif
 endfunction
 
-" -- MAPPINGS --
-" Resize vertical split
-noremap <c-h> <c-w><
-noremap <c-l> <c-w>>
-autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
-
-" Leader
-map <Space> <leader>
-nmap <leader>f :FZF<cr>
-nmap <leader>b :Buffers<cr>
-nmap <leader>a :Ag<cr>
-nmap <leader>t :Tags<cr>
-nmap <leader>h :History<cr>
-nmap <leader>s :Startify<cr>
-nmap <leader>d :call AddDebugger("o")<cr>
-nmap <leader>; <Plug>(easymotion-s)
-nmap <silent><leader>z :call <SID>zoom()<cr>
-
-" Others
-tnoremap <Space><Esc> <C-\><C-n>
-nnoremap g] g<C-]>
-
-" -- SIGNIFY --
-let g:signify_sign_delete = '-'
-let g:signify_sign_delete_first_line = '-'
-let g:signify_sign_change = '~'
-let g:signify_sign_show_count = 0
-
-" -- LINELETTERS --
-let g:lineletters_settings = {
-      \ 'highlight_group': 'MoreMsg',
-      \ 'prefix_chars': [',', ';', 'j']
-      \ }
-map <silent>, <Plug>LineLetters
-
-" CUSTOM COLORS (keep at the end)
+"-- CUSTOM COLORS (keep at the end) --
 hi rubyPseudoVariable ctermfg=9
 hi rubyBoolean ctermfg=1
 hi rubyDefine cterm=NONE ctermfg=2
@@ -329,13 +293,27 @@ hi! link SignColumn LineNr
 hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
 hi EasyMotionTarget2First ctermbg=none ctermfg=red
 hi EasyMotionTarget2Second ctermbg=none ctermfg=red
-hi TabLine cterm=NONE
-hi TabLineSel cterm=reverse
 hi Visual cterm=reverse ctermfg=11 ctermbg=0
-hi MatchParen ctermbg=NONE cterm=italic ctermfg=1
+hi MatchParen ctermbg=NONE cterm=NONE ctermfg=13
 hi SignifySignDelete ctermfg=9 ctermbg=0
 hi SignifySignDeleteFirstLine ctermfg=9 ctermbg=0
 
-" Remove this after this bug is fixed:
-" https://github.com/vim-airline/vim-airline/issues/2307
+"-- AUTOCOMMANDS --
+autocmd Filetype c
+      \ setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd Filetype go
+      \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+" see https://github.com/vim-airline/vim-airline/issues/2307
 autocmd BufEnter * set scroll=5
+
+" highlight all matches only while searching
+augroup vimrc-incsearch-highlight
+  autocmd!
+  autocmd CmdlineEnter /,\? :set hlsearch
+  autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
+
+" disable Coc Linter while easymotion is active
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd silent! CocEnable
