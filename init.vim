@@ -17,6 +17,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'skamsie/nnn'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'mcasper/vim-infer-debugger'
@@ -28,6 +29,7 @@ Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-rails'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'AndrewRadev/splitjoin.vim'
 
 call plug#end()
 
@@ -54,6 +56,12 @@ set colorcolumn=80
 set noshowcmd
 " allow changing buffers without saving
 set hidden
+
+" better search
+" https://vim.fandom.com/wiki/Searching
+set ignorecase
+set smartcase
+
 " reload file written by other program
 set autoread
 " enable backspace in insert mode
@@ -91,7 +99,7 @@ let g:airline_extensions = ['tabline', 'whitespace']
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_section_c = '%f'
-let g:airline_section_z = '%-4(%l/%c%) %p%% [%L]'
+let g:airline_section_z = '%-4(%l:%c%) %p%% [%L]'
 let g:airline#extensions#tabline#buffers_label = '♡'
 
 "-- NETRW --
@@ -223,6 +231,9 @@ map <expr> <C-c> exists('w:freestyle_data') ?
 noremap <c-h> <c-w><
 noremap <c-l> <c-w>>
 autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
+" Custom scroll
+noremap <silent><c-u> :call <SID>scroll('up')<cr>
+noremap <silent><c-d> :call <SID>scroll('down')<cr>
 
 " Leader
 map <Space> <leader>
@@ -234,6 +245,7 @@ nmap <leader>f :FZF<cr>
 nmap <leader>h :History<cr>
 nmap <leader>s :Startify<cr>
 nmap <leader>t :Tags<cr>
+nmap <leader>n <Plug>(coc-rename)
 nmap <silent><leader>z :call <SID>zoom()<cr>
 autocmd Filetype c nmap <leader>r
       \ :terminal gcc -Wall -std=c99 % -o out && ./out && rm out<CR>
@@ -261,6 +273,7 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
 let g:searchant_all = 0
 let g:searchant_map_stop = 0
+command! Gblame Git<Space>blame
 
 " zoom on current window
 function! s:zoom()
@@ -276,9 +289,20 @@ function! s:zoom()
   endif
 endfunction
 
+" scroll by 10 percent
+function s:scroll(direction)
+  let l:h = float2nr(0.1 * winheight('%'))
+
+  if a:direction == "down"
+    execute "normal! " . l:h . "\<C-E>"
+  else
+    execute "normal! " . l:h . "\<C-Y>"
+  end
+endfunction
+
 "-- CUSTOM COLORS (keep at the end) --
 hi rubyPseudoVariable ctermfg=9
-hi rubyBoolean ctermfg=1
+hi rubyBoolean ctermfg=9
 hi rubyDefine cterm=NONE ctermfg=2
 hi Comment cterm=italic
 hi StartifyPath ctermfg=11
@@ -294,18 +318,16 @@ hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
 hi EasyMotionTarget2First ctermbg=none ctermfg=red
 hi EasyMotionTarget2Second ctermbg=none ctermfg=red
 hi Visual cterm=reverse ctermfg=11 ctermbg=0
-hi MatchParen ctermbg=NONE cterm=NONE ctermfg=13
+hi MatchParen ctermbg=NONE cterm=NONE ctermfg=5
 hi SignifySignDelete ctermfg=9 ctermbg=0
 hi SignifySignDeleteFirstLine ctermfg=9 ctermbg=0
+hi htmlTagName cterm=NONE ctermfg=6
 
 "-- AUTOCOMMANDS --
 autocmd Filetype c
       \ setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 autocmd Filetype go
       \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
-
-" see https://github.com/vim-airline/vim-airline/issues/2307
-autocmd BufEnter * set scroll=5
 
 " highlight all matches only while searching
 augroup vimrc-incsearch-highlight
@@ -317,3 +339,5 @@ augroup END
 " disable Coc Linter while easymotion is active
 autocmd User EasyMotionPromptBegin silent! CocDisable
 autocmd User EasyMotionPromptEnd silent! CocEnable
+
+vnoremap <leader>r "hy:%s/<C-r>h//gc<left><left><left>
