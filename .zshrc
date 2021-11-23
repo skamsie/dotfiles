@@ -1,15 +1,14 @@
 #ZSH_DISABLE_COMPFIX="true"
 #DISABLE_UNTRACKED_FILES_DIRTY="true"
 
+source ~/.bashrc
+
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.oh-my-zsh
 
 plugins=(
-  # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#osx
-  osx
-
-  # show github status
-  git
+  # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
+  macos
 
   # git clone https://github.com/zsh-users/zsh-autosuggestions \
   #   $ZSH_CUSTOM/plugins/zsh-autosuggestions
@@ -33,13 +32,26 @@ ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[white]%}ᐃ "
 ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[white]%}− "
 ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[white]%}ρ "
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[cyan]%}§ "
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[blue]%}◒ "
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[blue]%}⊄ "
 
 PROMPT='%{$fg[cyan]%}%2~%{$reset_color%}%{$fg[red]%}|%{$reset_color%}$(git_prompt_info)$(git_prompt_status)%{$fg[red]%}>%{$reset_color%} '
 
+
 eval "$(direnv hook $SHELL)"
 eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+eval "$(pyenv init --path)"
 eval "$(rbenv init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export BAT_THEME="skamsie"
+
+function Rg() {
+  rg --column --line-number --no-heading --color=always --smart-case "$1" |
+    fzf --ansi \
+      --delimiter : --nth 4.. \
+      --bind 'enter:execute(nvim -c ":`echo {}| cut -d: -f2`" `echo {}| cut -d: -f1`)+abort' \
+      --preview 'bat --style=numbers,header,changes,snip --color=always --highlight-line {2} {1}' \
+      --preview-window 'default:right:60%:~1:+{2}+3/2:border-left'
+}

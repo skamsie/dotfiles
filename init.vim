@@ -31,6 +31,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'AndrewRadev/splitjoin.vim'
 
+"-- EXPERIMENTS
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 call plug#end()
 
 "-- NEOVIM SPECIFIC--
@@ -145,10 +148,10 @@ let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 let s:fzf_options = {'options': '--delimiter : --nth 4..'}
 
 command! -bang -nargs=* Ag
-      \ call fzf#vim#ag(<q-args>,
-      \ '--hidden --ignore .git', <bang>0 ?
+      \  call fzf#vim#ag(<q-args>,
+      \    '--hidden --ignore .git', <bang>0 ?
       \ fzf#vim#with_preview(s:fzf_options, 'up:60%')
-      \ : fzf#vim#with_preview(s:fzf_options, 'right:50%:hidden', '?'),
+      \ : fzf#vim#with_preview(s:fzf_options, 'right:50%', '?'),
       \ <bang>0)
 
 command! -bang -nargs=* Rg
@@ -159,8 +162,7 @@ command! -bang -nargs=* Rg
       \ : fzf#vim#with_preview(s:fzf_options, 'right:50%:hidden', '?'), <bang>0)
 
 let g:fzf_layout =
-      \ { 'window': { 'width': 1, 'height': 0.44, 'yoffset': 1 } }
-
+      \ { 'window': { 'width': 1, 'height': 0.5, 'yoffset': 1 } }
 let g:fzf_colors =
       \ { 'fg':      ['fg', 'Normal'],
       \   'bg':      ['bg', 'Normal'],
@@ -241,7 +243,7 @@ nmap <leader>; <Plug>(easymotion-s)
 nmap <leader>a :Ag<cr>
 nmap <leader>b :Buffers<cr>
 nmap <leader>d :call AddDebugger("o")<cr>
-nmap <leader>f :FZF<cr>
+nmap <leader>f :Files<cr>
 nmap <leader>h :History<cr>
 nmap <leader>s :Startify<cr>
 nmap <leader>t :Tags<cr>
