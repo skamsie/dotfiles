@@ -7,7 +7,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'timakro/vim-searchant'
+Plug 'qxxxb/vim-searchhi'
 Plug 'skamsie/vim-yank-bank'
 Plug 'alvan/vim-closetag'
 Plug 'janko-m/vim-test'
@@ -21,7 +21,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'mcasper/vim-infer-debugger'
-Plug 'skamsie/vim-freestyle'
 Plug 'jiangmiao/auto-pairs'
 Plug 'skamsie/vim-lineletters'
 Plug 'easymotion/vim-easymotion'
@@ -32,7 +31,9 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'AndrewRadev/splitjoin.vim'
 
 "-- EXPERIMENTS
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+"Plug 'xolox/vim-notes'
+"Plug 'xolox/vim-misc'
+"Plug 'MunifTanjim/nui.nvim'
 
 call plug#end()
 
@@ -48,7 +49,6 @@ filetype indent on
 set matchpairs+=<:>
 set tags+=gems.tags
 set noswapfile
-set completeopt+=noselect
 set completeopt-=preview
 set omnifunc=syntaxcomplete#Complete
 set ttimeoutlen=10
@@ -84,8 +84,8 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 " search highlight
-set incsearch
-set nohlsearch
+" set incsearch
+" set nohlsearch
 
 "-- COLORSCHEME --
 set background=dark
@@ -103,7 +103,7 @@ let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_section_c = '%f'
 let g:airline_section_z = '%-4(%l:%c%) %p%% [%L]'
-let g:airline#extensions#tabline#buffers_label = '♡'
+let g:airline#extensions#tabline#buffers_label = '♡ '
 
 "-- NETRW --
 let g:netrw_preview = 1
@@ -212,6 +212,11 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+"Searhhi
+let g:searchhi_clear_all_autocmds = 'InsertEnter'
+let g:searchhi_update_all_autocmds = 'InsertLeave'
+nmap <silent> <C-C> <Plug>(searchhi-clear-all)
+
 let g:coc_global_extensions = [
       \ 'coc-solargraph',
       \ 'coc-vimlsp',
@@ -220,13 +225,6 @@ let g:coc_global_extensions = [
       \ 'coc-css',
       \ 'coc-clangd'
       \ ]
-
-" -- FREESTYLE --
-let g:freestyle_settings = { 'no_maps': 1 }
-map <C-j> <Plug>FreestyleToggleCursors
-map <C-k> <Plug>FreestyleRun
-map <expr> <C-c> exists('w:freestyle_data') ?
-      \ "\<Plug>FreestyleClear" : "\<Plug>SearchantStop"
 
 " -- MAPPINGS --
 " Resize vertical split
@@ -247,7 +245,6 @@ nmap <leader>f :Files<cr>
 nmap <leader>h :History<cr>
 nmap <leader>s :Startify<cr>
 nmap <leader>t :Tags<cr>
-nmap <leader>n <Plug>(coc-rename)
 nmap <silent><leader>z :call <SID>zoom()<cr>
 autocmd Filetype c nmap <leader>r
       \ :terminal gcc -Wall -std=c99 % -o out && ./out && rm out<CR>
@@ -309,10 +306,11 @@ hi rubyDefine cterm=NONE ctermfg=2
 hi Comment cterm=italic
 hi StartifyPath ctermfg=11
 hi StartifySlash ctermfg=11
-hi link StartifyFile Normal
-hi link CocFloating CursorColumn
-hi link CocListBgBlue CursorColumn
 hi link NormalFloat CursorColumn
+
+hi link StartifyFile Normal
+hi CocMenuSel ctermbg=237
+
 hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
 hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 hi! link SignColumn LineNr
