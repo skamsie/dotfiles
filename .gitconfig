@@ -3,7 +3,7 @@
   email = alexandru.dimian@gmail.com
 
 [core]
-  excludesfile = ~/.global_gitignore
+  excludesfile = ~/.gitignore
 
 [alias]
   br = branch --sort=committerdate
@@ -22,3 +22,5 @@
 
 [log]
   decorate = short
+[color]
+  ui = true
