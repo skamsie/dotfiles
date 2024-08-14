@@ -21,7 +21,6 @@ source $ZSH/oh-my-zsh.sh
 export EDITOR='nvim'
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-export JAVA_HOME=$(/usr/libexec/java_home)
 
 #custom theme
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}"
@@ -44,7 +43,7 @@ eval "$(pyenv init --path)"
 eval "$(rbenv init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh)
 
 export BAT_THEME="skamsie"
 

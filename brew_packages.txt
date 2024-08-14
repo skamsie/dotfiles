@@ -1,4 +1,5 @@
 ag
+node
 diff-so-fancy
 direnv
 fzf
