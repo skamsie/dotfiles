@@ -29,13 +29,12 @@ Plug 'tpope/vim-rails'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'altercation/vim-colors-solarized'
 
 "LUA
 Plug 'nvim-lua/plenary.nvim'
 Plug 'CRAG666/code_runner.nvim'
 Plug 'glepnir/dashboard-nvim'
-
-Plug '~/github/skamsie/vim-colors-solarized'
 
 call plug#end()
 
