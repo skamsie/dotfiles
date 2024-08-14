@@ -11,6 +11,12 @@ mkdir -p "$(bat --config-dir)/themes"
 wget -P "$(bat --config-dir)/themes" https://github.com/skamsie/dotfiles/raw/master/skamsie.tmTheme
 bat cache --build
 ```
+
+## git
+
+```
+cp .gitignore ~ && cp .gitconfig ~
+```
 ## neovim
 
 ```bash

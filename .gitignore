@@ -2,3 +2,4 @@ tags
 .ropeproject/
 .envrc
 .DS_Store
+.solargraph.yml
