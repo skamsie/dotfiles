@@ -1,5 +1,5 @@
 ag
-node
+bat
 diff-so-fancy
 direnv
 fzf
@@ -7,6 +7,7 @@ geckodriver
 hub
 mycli
 neovim
+node
 postgresql
 pyenv
 pyenv-virtualenv
