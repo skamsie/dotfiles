@@ -1,8 +1,12 @@
 ag
+diff-so-fancy
 direnv
 fzf
 geckodriver
+hub
+mycli
 neovim
+postgresql
 pyenv
 pyenv-virtualenv
 rbenv
@@ -12,6 +16,3 @@ tmux
 watch
 wget
 zsh
-hub
-mycli
-postgresql
