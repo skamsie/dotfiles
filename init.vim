@@ -2,7 +2,6 @@
 " -- PLUGINS --
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'altercation/vim-colors-solarized'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mhinz/vim-startify'
@@ -20,6 +19,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-eunuch'
 Plug 'mcasper/vim-infer-debugger'
 Plug 'jiangmiao/auto-pairs'
 Plug 'skamsie/vim-lineletters'
@@ -30,10 +30,12 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'AndrewRadev/splitjoin.vim'
 
-"-- EXPERIMENTS
-"Plug 'xolox/vim-notes'
-"Plug 'xolox/vim-misc'
-"Plug 'MunifTanjim/nui.nvim'
+"LUA
+Plug 'nvim-lua/plenary.nvim'
+Plug 'CRAG666/code_runner.nvim'
+Plug 'glepnir/dashboard-nvim'
+
+Plug '~/github/skamsie/vim-colors-solarized'
 
 call plug#end()
 
@@ -83,15 +85,16 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-" search highlight
-" set incsearch
-" set nohlsearch
+"search highlight
+set incsearch
+set nohlsearch
 
 "-- COLORSCHEME --
-set background=dark
+
 let g:solarized_termtrans = 1
 let g:solarized_contrast = "high"
 let g:solarized_visibility= "high"
+
 colorscheme solarized
 
 "-- AIRLINE --
@@ -176,6 +179,7 @@ let g:fzf_colors =
       \   'marker':  ['fg', 'Keyword'],
       \   'spinner': ['fg', 'Label'],
       \   'header':  ['fg', 'Comment'] }
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " -- GOYO --
 let g:goyo_width = 100
@@ -185,7 +189,8 @@ function! s:goyo_leave()
   set fillchars+=vert:│
   hi VertSplit ctermbg=NONE guibg=NONE
 endfunction
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+"autocmd! User GoyoLeave nested call <SID>goyo_leave()
+autocmd! User GoyoLeave exec 'source ~/.config/nvim/init.vim'
 
 " -- NNN ---
 let g:nnn_limit_topics_at = 15
@@ -260,6 +265,15 @@ let g:signify_sign_change = '~'
 let g:signify_sign_show_count = 0
 autocmd User SignifyAutocmds autocmd! signify FocusGained
 
+" -- WIKI --
+hi! link VimwikiHeader2 Type
+hi! link VimwikiHeader3 Conditional
+
+let wiki = {}
+let wiki.path = '~/wiki/'
+let wiki.nested_syntaxes = {'ruby': 'ruby'}
+let g:vimwiki_list = [wiki]
+
 "-- LINELETTERS --
 let g:lineletters_settings = {
       \ 'highlight_group': 'MoreMsg',
@@ -300,19 +314,23 @@ function s:scroll(direction)
 endfunction
 
 "-- CUSTOM COLORS (keep at the end) --
-hi rubyPseudoVariable ctermfg=9
-hi rubyBoolean ctermfg=9
-hi rubyDefine cterm=NONE ctermfg=2
-hi Comment cterm=italic
-hi StartifyPath ctermfg=11
-hi StartifySlash ctermfg=11
-hi link NormalFloat CursorColumn
+hi link ColorColumn NormalFloat
+hi! rubyPseudoVariable ctermfg=9
+hi rubyBoolean ctermfg=5
+hi rubyInteger ctermfg=5
+hi! rubyDefine cterm=NONE ctermfg=2
+hi! Comment cterm=italic
+hi! StartifyPath ctermfg=11
+hi! StartifySlash ctermfg=11
+hi! link NormalFloat CursorColumn
+hi! link Function Identifier
 
 hi link StartifyFile Normal
+
 hi CocMenuSel ctermbg=237
 
-hi VertSplit ctermbg=NONE guibg=NONE ctermfg=12
-hi ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
+hi! VertSplit ctermbg=NONE guibg=NONE ctermfg=12
+hi! ErrorMsg cterm=NONE ctermfg=9 gui=bold guifg=Magenta
 hi! link SignColumn LineNr
 hi SpecialKey cterm=bold ctermfg=8 gui=bold guifg=Magenta
 hi EasyMotionTarget2First ctermbg=none ctermfg=red
@@ -322,12 +340,17 @@ hi MatchParen ctermbg=NONE cterm=NONE ctermfg=5
 hi SignifySignDelete ctermfg=9 ctermbg=0
 hi SignifySignDeleteFirstLine ctermfg=9 ctermbg=0
 hi htmlTagName cterm=NONE ctermfg=6
+hi! link String Keyword
+hi! link Delimiter String
 
 "-- AUTOCOMMANDS --
 autocmd Filetype c
       \ setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 autocmd Filetype go
       \ setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+augroup vimrc
+  autocmd TermOpen * :DisableWhitespace
+augroup END
 
 " highlight all matches only while searching
 augroup vimrc-incsearch-highlight
@@ -340,4 +363,5 @@ augroup END
 autocmd User EasyMotionPromptBegin silent! CocDisable
 autocmd User EasyMotionPromptEnd silent! CocEnable
 
+" rename visual selection
 vnoremap <leader>r "hy:%s/<C-r>h//gc<left><left><left>
