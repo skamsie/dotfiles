@@ -1,0 +1,45 @@
+[window]
+
+padding = { x = 4, y = 2 }
+
+[font]
+
+normal = { family = 'Akkurat Mono', style = 'Regular' }
+offset = { x = 0, y = 2 }
+size = 12
+
+# Colors (Solarized Dark)
+
+# Default colors
+[colors.primary]
+background = '#002B36'
+foreground = '#A6B0B0'
+
+# Normal colors
+[colors.normal]
+black   = '#0A2731'
+red     = '#F55A53'
+green   = '#A1B928'
+yellow  = '#D19B27'
+blue    = '#5EA9FB'
+magenta = '#F268A6'
+cyan    = '#46B5A8'
+white   = '#eee8d5'
+
+# Bright colors
+[colors.bright]
+black   = '#4B93B5'
+red     = '#cb4b16'
+green   = '#586e75'
+yellow  = '#b58802'
+blue    = '#839496'
+magenta = '#6c71c4'
+cyan    = '#93a1a1'
+white   = '#fdf6e3'
+
+[colors.cursor]
+
+[env]
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+TERM_ALACRITTY='true'
