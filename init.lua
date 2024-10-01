@@ -52,18 +52,6 @@ vim.opt.incsearch = true  -- Equivalent to 'set incsearch'
 vim.opt.hlsearch = false  -- Equivalent to 'set nohlsearch'
 vim.opt.clipboard = "unnamed"
 
---vim.api.nvim_set_hl(0, 'ColorColumn', { link = 'NormalFloat' })
---vim.api.nvim_set_hl(0, 'rubyPseudoVariable', { ctermfg = 9, force = true })
---vim.api.nvim_set_hl(0, 'rubyBoolean', { ctermfg = 5 })
---vim.api.nvim_set_hl(0, 'rubyInteger', { ctermfg = 5 })
---vim.api.nvim_set_hl(0, 'rubyDefine', { ctermfg = 2, force = true })
---vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'CursorColumn', force = true })
---vim.api.nvim_set_hl(0, 'Function', { link = 'Identifier', force = true })
---vim.api.nvim_set_hl(0, 'Comment', { force = true, italic = true })
-
-vim.api.nvim_set_hl(0, 'rubyMacro', { link = 'Type' })
-vim.api.nvim_set_hl(0, 'rubyConstant', { link = 'Changed' })
-
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -73,13 +61,39 @@ require("lazy").setup({
       lazy = false,
       priority = 1000,
       opts = {
+        transparent = { enabled = true },
         on_colors = function()
           return {
             -- match .alacrittty.toml
-            green  = '#a1b928',
+            green  = '#9FB927',
             blue   = '#5ea9fb',
-            cyan   = '#46b5a8',
-            orange = '#C95A38'
+            cyan   = '#49B6A9',
+            orange = '#E86C48',
+            yellow = '#D09A27',
+            violet = '#8384FC',
+            base0 = '#A6B0B0',
+            base01 = '#6B8287',
+            magenta = '#CF598E'
+          }
+        end,
+        on_highlights = function(colors, color)
+          return {
+            Normal = { fg = base0 },
+            Changed = { fg = colors.yellow },
+            Comment = { italic = true },
+            Number = { fg = colors.magenta },
+            Define = { fg = colors.green, bold = false },
+            Boolean = { fg = colors.magenta },
+            rubyString = { fg = colors.green },
+            rubySymbol = { link = Character },
+            rubyMacro = { fg = colors.orange },
+            rubyMagicComment = { fg = colors.orange },
+            rubySymbol = { fg = colors.cyan },
+            rubyInteger = { link = Number },
+            rubyPercentStringDelimiter = { fg = colors.violet },
+            rubyStringDelimiter = { fg = colors.green },
+            rubyFloat = { link = Number },
+            Type = { fg = colors.yellow },
           }
         end
       },
@@ -96,22 +110,6 @@ require("lazy").setup({
       'skamsie/vim-lineletters',
       vim.api.nvim_set_keymap('', ',', '<Plug>LineLetters', { silent = true })
     },
-
-    -- Treesitter
-   -- {
-   --   "nvim-treesitter/nvim-treesitter",
-   --   build = ":TSUpdate",
-   --   config = function () 
-   --     local configs = require("nvim-treesitter.configs")
-
-   --     configs.setup({
-   --       ensure_installed = { "c", "lua", "vim", "vimdoc", "elixir", "javascript", "html" },
-   --       sync_install = false,
-   --       highlight = { enable = true },
-   --       indent = { enable = true },  
-   --     })
-   --   end
-   -- },
 
     'tpope/vim-rails',
 
