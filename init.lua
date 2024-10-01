@@ -29,12 +29,27 @@ vim.opt.hidden = true
 vim.api.nvim_set_keymap('n', '<c-h>', '<c-w><', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>>', { noremap = true })
 
--- Fzf-lua remappings
-vim.keymap.set('n', '<leader>f', function() require('fzf-lua').files() end, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>a', function() require('fzf-lua').grep_project() end, { noremap = true, silent = true })
+-- Highlight all matches only while searching
+local augroup = vim.api.nvim_create_augroup("vimrc_incsearch_highlight", { clear = true })
 
+vim.api.nvim_create_autocmd("CmdlineEnter", {
+  pattern = { "/", "\\?" },
+  callback = function() vim.opt.hlsearch = true end,
+  group = augroup,
+})
 
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+  pattern = { "/", "\\?" },
+  callback = function() vim.opt.hlsearch = false end,
+  group = augroup,
+})
 
+-- Searchhi settings
+vim.g.searchhi_clear_all_autocmds = 'InsertEnter'
+vim.g.searchhi_update_all_autocmds = 'InsertLeave'
+
+-- Key mapping
+vim.keymap.set('n', '<C-C>', '<Plug>(searchhi-clear-all)', { silent = true })
 -- lineletters
 vim.g.lineletters_settings = {
   highlight_group = 'Constant',
@@ -65,35 +80,42 @@ require("lazy").setup({
         on_colors = function()
           return {
             -- match .alacrittty.toml
-            green  = '#9FB927',
-            blue   = '#5ea9fb',
-            cyan   = '#49B6A9',
-            orange = '#E86C48',
-            yellow = '#D09A27',
-            violet = '#8384FC',
-            base0 = '#A6B0B0',
-            base01 = '#6B8287',
-            magenta = '#CF598E'
+            green  = '#9fb927',
+            blue   = '#4b9ffc',
+            cyan   = '#49b6a9',
+            orange = '#e86c48',
+            yellow = '#d09a27',
+            violet = '#837CE4',
+            base0 = '#a6b0b0',
+            base01 = '#6b8287',
+            magenta = '#cf598e'
           }
         end,
         on_highlights = function(colors, color)
+          local lighten = color.lighten
+
           return {
-            Normal = { fg = base0 },
+            Keyword = { fg = colors.green, bold = false },
+            Boolean = { fg = colors.magenta },
             Changed = { fg = colors.yellow },
             Comment = { italic = true },
-            Number = { fg = colors.magenta },
             Define = { fg = colors.green, bold = false },
-            Boolean = { fg = colors.magenta },
-            rubyString = { fg = colors.green },
-            rubySymbol = { link = Character },
+            Identifier = { fg = colors.base0 },
+            IncSearch = { bg = colors.red, fg = '#002B36', bold = false },
+            Normal = { fg = colors.base0 },
+            Number = { fg = colors.magenta },
+            Property = { fg = colors.base0 },
+            Search = { bg = colors.yellow, fg = '#002B36' },
+            Type = { fg = colors.yellow },
+            rubyFloat = { link = Number },
+            rubyInteger = { link = Number },
             rubyMacro = { fg = colors.orange },
             rubyMagicComment = { fg = colors.orange },
-            rubySymbol = { fg = colors.cyan },
-            rubyInteger = { link = Number },
             rubyPercentStringDelimiter = { fg = colors.violet },
+            rubyString = { fg = colors.green },
             rubyStringDelimiter = { fg = colors.green },
-            rubyFloat = { link = Number },
-            Type = { fg = colors.yellow },
+            rubySymbol = { fg = colors.cyan },
+            rubySymbol = { link = Character },
           }
         end
       },
@@ -111,19 +133,51 @@ require("lazy").setup({
       vim.api.nvim_set_keymap('', ',', '<Plug>LineLetters', { silent = true })
     },
 
+    -- Ruby and Rails stuff
     'tpope/vim-rails',
+
+    --
+    'qxxxb/vim-searchhi',
 
     -- FZF
     {
       "ibhagwan/fzf-lua",
-      -- optional for icon support
-      dependencies = { "nvim-tree/nvim-web-devicons" },
       config = function()
+        function set_fzf_keymap(key, func)
+          vim.keymap.set(
+            'n', '<leader>' .. key,
+            function()
+              require('fzf-lua')[func]()
+            end,
+            { noremap = true, silent = true }
+          )
+        end
+
+        set_fzf_keymap('f', 'files')
+        set_fzf_keymap('a', 'live_grep_native')
+
         -- calling `setup` is optional for customization
-        require("fzf-lua").setup({})
+        require("fzf-lua").setup(
+          {
+            winopts = { row = 0.5, col = 0.5, width = 0.8, height = 0.8, border = 'single' },
+            defaults = { file_icons = false },
+            files = {},
+          }
+        )
       end
     },
   },
   install = { colorscheme = { 'solarized' } },
   checker = { enabled = true },
+  ui = {
+    border = 'single',
+    icons = {
+      list = {
+        "●",
+        "▸",
+        "■",
+        "*",
+      },
+    },
+  }
 })
