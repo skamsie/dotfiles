@@ -24,50 +24,33 @@ vim.opt.swapfile = false
 vim.opt.updatetime = 500
 vim.opt.colorcolumn = "80"
 vim.opt.hidden = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.incsearch = true
+vim.opt.hlsearch = false
+vim.opt.clipboard = "unnamed"
 
 -- Resize vertical split
 vim.api.nvim_set_keymap('n', '<c-h>', '<c-w><', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>>', { noremap = true })
 
--- Highlight all matches only while searching
-local augroup = vim.api.nvim_create_augroup("vimrc_incsearch_highlight", { clear = true })
+vim.cmd [[
+  " scroll by 10 percent
+  function s:scroll(direction)
+    let l:h = float2nr(0.1 * winheight('%'))
 
-vim.api.nvim_create_autocmd("CmdlineEnter", {
-  pattern = { "/", "\\?" },
-  callback = function() vim.opt.hlsearch = true end,
-  group = augroup,
-})
+    execute "normal! " . l:h . (a:direction == 'down' ? "\<C-E>" : "\<C-Y>")
+  endfunction
 
-vim.api.nvim_create_autocmd("CmdlineLeave", {
-  pattern = { "/", "\\?" },
-  callback = function() vim.opt.hlsearch = false end,
-  group = augroup,
-})
+  " Custom scroll
+  noremap <silent><c-u> :call <SID>scroll('up')<cr>
+  noremap <silent><c-d> :call <SID>scroll('down')<cr>
+]]
 
--- Searchhi settings
-vim.g.searchhi_clear_all_autocmds = 'InsertEnter'
-vim.g.searchhi_update_all_autocmds = 'InsertLeave'
-
--- Key mapping
-vim.keymap.set('n', '<C-C>', '<Plug>(searchhi-clear-all)', { silent = true })
--- lineletters
-vim.g.lineletters_settings = {
-  highlight_group = 'Constant',
-  prefix_chars = { ',', ';', 'j' }
-}
--- Make sure vertical separator is a |
-vim.opt.fillchars:append("vert:│")
-
--- Indentation settings
-vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
-vim.opt.incsearch = true  -- Equivalent to 'set incsearch'
-vim.opt.hlsearch = false  -- Equivalent to 'set nohlsearch'
-vim.opt.clipboard = "unnamed"
-
--- Setup lazy.nvim
 require("lazy").setup({
   spec = {
     -- Solarized colors
@@ -95,17 +78,16 @@ require("lazy").setup({
           local lighten = color.lighten
 
           return {
-            Keyword = { fg = colors.green, bold = false },
             Boolean = { fg = colors.magenta },
             Changed = { fg = colors.yellow },
             Comment = { italic = true },
             Define = { fg = colors.green, bold = false },
             Identifier = { fg = colors.base0 },
-            IncSearch = { bg = colors.red, fg = '#002B36', bold = false },
+            IncSearch = { bg = colors.red, fg = '#073642', bold = false },
             Normal = { fg = colors.base0 },
             Number = { fg = colors.magenta },
             Property = { fg = colors.base0 },
-            Search = { bg = colors.yellow, fg = '#002B36' },
+            Search = { bg = colors.yellow, fg = '#073642', bold = false },
             Type = { fg = colors.yellow },
             rubyFloat = { link = Number },
             rubyInteger = { link = Number },
@@ -115,7 +97,6 @@ require("lazy").setup({
             rubyString = { fg = colors.green },
             rubyStringDelimiter = { fg = colors.green },
             rubySymbol = { fg = colors.cyan },
-            rubySymbol = { link = Character },
           }
         end
       },
@@ -127,19 +108,26 @@ require("lazy").setup({
       end,
     },
 
-    -- Vim Lineletters
+    -- Because letters are much easier to touch type than numbers (๑˃̵ᴗ˂̵)و
     {
       'skamsie/vim-lineletters',
-      vim.api.nvim_set_keymap('', ',', '<Plug>LineLetters', { silent = true })
+      init = function()
+        vim.g.lineletters_settings = { prefix_chars = { ',', ';', 'j' } }
+        vim.api.nvim_set_keymap('', ',', '<Plug>LineLetters', { silent = true })
+      end
     },
 
-    -- Ruby and Rails stuff
-    'tpope/vim-rails',
+    -- Highlight the current search result in a different style than the other search results.
+    {
+      'qxxxb/vim-searchhi',
+      config = function()
+        vim.g.searchhi_clear_all_autocmds = 'InsertEnter'
+        vim.g.searchhi_update_all_autocmds = 'InsertLeave'
+        vim.keymap.set('n', '<C-C>', '<Plug>(searchhi-clear-all)', { silent = true })
+      end
+    },
 
-    --
-    'qxxxb/vim-searchhi',
-
-    -- FZF
+    -- Improved fzf.vim written in lua
     {
       "ibhagwan/fzf-lua",
       config = function()
