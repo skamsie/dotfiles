@@ -44,11 +44,11 @@ vim.cmd [[
     let l:h = float2nr(0.1 * winheight('%'))
 
     execute "normal! " . l:h . (a:direction == 'down' ? "\<C-E>" : "\<C-Y>")
-  endfunction
+    endfunction
 
-  " Custom scroll
-  noremap <silent><c-u> :call <SID>scroll('up')<cr>
-  noremap <silent><c-d> :call <SID>scroll('down')<cr>
+    " Custom scroll
+    noremap <silent><c-u> :call <SID>scroll('up')<cr>
+    noremap <silent><c-d> :call <SID>scroll('down')<cr>
 ]]
 
 require("lazy").setup({
@@ -108,7 +108,9 @@ require("lazy").setup({
       end,
     },
 
-    -- Because letters are much easier to touch type than numbers (๑˃̵ᴗ˂̵)و
+    -- Startup Screen
+
+    -- Because letters are much easier to touch type than numbers
     {
       'skamsie/vim-lineletters',
       init = function()
@@ -127,6 +129,92 @@ require("lazy").setup({
       end
     },
 
+     {
+      'nvimdev/dashboard-nvim',
+      event = 'VimEnter',
+      config = function()
+        local api = vim.api
+
+        local function generate_empty_lines(size)
+            local fill = {}
+            for _ = 1, size do
+                table.insert(fill, "")
+            end
+            return fill
+        end
+
+        local function center_header(header)
+            local size = math.floor(vim.o.lines / 2) - math.ceil(#header / 2) - 6
+            local fill = generate_empty_lines(size)
+            return vim.list_extend(fill, header)
+        end
+
+        local header_content = {
+          [[                                   ]],
+          [[            header                 ]],
+          [[                                   ]],
+        }
+
+        require('dashboard').setup {
+          theme = 'doom',
+          config = {
+            header = center_header(
+              {
+                '///',
+                '      ',
+              }
+            ),
+            center = {
+              {
+                icon = '  ',
+                icon_hl = 'Title',
+                desc_hl = 'Title',
+                key_hl = 'Number',
+                desc = 'Edit init.lua',
+                key = 'e',
+                key_format = '<%s>',
+                action = ':e ~/.config/nvim/init.lua'
+              },
+              {
+                icon = '  ',
+                desc = 'History           ',
+                key = 'h',
+                key_hl = 'Number',
+                key_format = '<%s>',
+                action = 'FzfLua oldfiles'
+              },
+              {
+                icon = '  ',
+                desc = 'Find File           ',
+                key = 'f',
+                key_hl = 'Number',
+                key_format = '<%s>',
+                action = 'FzfLua files'
+              },
+              {
+                icon = '  ',
+                desc = 'Sync Plugins',
+                key = 's',
+                key_hl = 'Number',
+                key_format = '<%s>',
+                action = 'Lazy sync'
+              },
+              {
+                icon = '  ',
+                desc = 'Fzf Lua',
+                key = 's',
+                key_hl = 'Number',
+                key_format = '<%s>',
+                action = 'Lazy sync'
+              },
+            },
+            footer = {}  --your footer
+
+          },
+        }
+      end
+    },
+
     -- Improved fzf.vim written in lua
     {
       "ibhagwan/fzf-lua",
@@ -142,15 +230,34 @@ require("lazy").setup({
         end
 
         set_fzf_keymap('f', 'files')
-        set_fzf_keymap('a', 'live_grep_native')
+        set_fzf_keymap('a', 'grep_project')
 
         -- calling `setup` is optional for customization
+        local actions = require 'fzf-lua.actions'
         require("fzf-lua").setup(
-          {
-            winopts = { row = 0.5, col = 0.5, width = 0.8, height = 0.8, border = 'single' },
-            defaults = { file_icons = false },
-            files = {},
+        {
+          winopts = {
+            row = 0.5,
+            col = 0.5,
+            width = 0.8,
+            height = 0.8,
+            border = 'single',
+            prompt = 'B'
+          },
+          fzf_opts = { ['--layout'] = 'default' },
+          defaults = { file_icons = false },
+          files = {
+            winopts = { preview = { delay = 10 } }
+          },
+          oldfiles = {
+            winopts = { preview = { delay = 10 } }
+          },
+          grep = {
+            actions = {
+              ["ctrl-r"] =  actions.toggle_ignore,
+            }
           }
+        }
         )
       end
     },
