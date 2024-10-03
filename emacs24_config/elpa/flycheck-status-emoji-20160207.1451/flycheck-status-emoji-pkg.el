@@ -1,1 +1,0 @@
-(define-package "flycheck-status-emoji" "20160207.1451" "Show flycheck status using cute, compact emoji" '((emacs "24") (flycheck "0.20") (let-alist "1.0")) :url "https://github.com/liblit/flycheck-status-emoji" :keywords '("convenience" "languages" "tools"))

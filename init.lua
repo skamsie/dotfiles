@@ -15,6 +15,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.fn.setenv('TERM', 'xterm-256color')
+
 -- NVIM SETTINGS
 vim.g.mapleader = " "
 vim.cmd('filetype plugin on')
@@ -34,21 +36,29 @@ vim.opt.incsearch = true
 vim.opt.hlsearch = false
 vim.opt.clipboard = "unnamed"
 
+-- NETRW settings
+vim.g.netrw_preview = 1
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 33
+vim.g.netrw_localrmdir = 'rm -rf'
+
 -- Resize vertical split
 vim.api.nvim_set_keymap('n', '<c-h>', '<c-w><', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>>', { noremap = true })
 
 vim.cmd [[
+  autocmd User AlphaReady set laststatus=0 | autocmd BufUnload <buffer> set laststatus=2
+
   " scroll by 10 percent
   function s:scroll(direction)
     let l:h = float2nr(0.1 * winheight('%'))
 
     execute "normal! " . l:h . (a:direction == 'down' ? "\<C-E>" : "\<C-Y>")
-    endfunction
+  endfunction
 
-    " Custom scroll
-    noremap <silent><c-u> :call <SID>scroll('up')<cr>
-    noremap <silent><c-d> :call <SID>scroll('down')<cr>
+  " Custom scroll
+  noremap <silent><c-u> :call <SID>scroll('up')<cr>
+  noremap <silent><c-d> :call <SID>scroll('down')<cr>
 ]]
 
 require("lazy").setup({
@@ -78,6 +88,7 @@ require("lazy").setup({
           local lighten = color.lighten
 
           return {
+            -- EndOfBuffer = { fg = colors.magenta },
             Boolean = { fg = colors.magenta },
             Changed = { fg = colors.yellow },
             Comment = { italic = true },
@@ -108,8 +119,6 @@ require("lazy").setup({
       end,
     },
 
-    -- Startup Screen
-
     -- Because letters are much easier to touch type than numbers
     {
       'skamsie/vim-lineletters',
@@ -128,89 +137,141 @@ require("lazy").setup({
         vim.keymap.set('n', '<C-C>', '<Plug>(searchhi-clear-all)', { silent = true })
       end
     },
-
-     {
-      'nvimdev/dashboard-nvim',
-      event = 'VimEnter',
+    {
+      'goolord/alpha-nvim',
       config = function()
-        local api = vim.api
+        local lazy = require("lazy")
+        local alpha = require 'alpha'
+        local dashboard = require 'alpha.themes.dashboard'
+        local open_oldfiles = function() vim.cmd([[FzfLua oldfiles]]) end
+        local datetime = os.date " %d-%m-%Y"
+        local body = {}
+        local width = 36
+        local dir_icon = ' '
 
         local function generate_empty_lines(size)
-            local fill = {}
-            for _ = 1, size do
-                table.insert(fill, "")
-            end
-            return fill
+          local fill = {}
+          for _ = 1, size do
+            table.insert(fill, "")
+          end
+          return fill
         end
 
-        local function center_header(header)
-            local size = math.floor(vim.o.lines / 2) - math.ceil(#header / 2) - 6
-            local fill = generate_empty_lines(size)
-            return vim.list_extend(fill, header)
+        -- center header vertically by adding empty lines
+        local function center_header(header, adjust)
+          local size = math.floor(vim.o.lines / 2) - math.ceil(#header / 2) - (adjust - 2)
+          local fill = generate_empty_lines(size)
+          return vim.list_extend(fill, header)
         end
 
-        local header_content = {
-          [[                                   ]],
-          [[            header                 ]],
-          [[                                   ]],
+        local items = {
+          '   |   |                                    |',
+          '   |   | Bookmarks                          |',
+          '  | e | ~/.config/nvim/init.lua            | e ~/.config/nvim/init.lua',
+          '  | a | ~/.alacritty.toml                  | e ~/.alacritty.toml',
+          '  | u | ~/.zshrc                           | e ~/.zshrc',
+          '  | c | ~/github/skamsie/casetofoane       | e ~/github/skamsie/casetofoane',
+          '   |   |                                    |',
+          '   |   | Actions                            |',
+          '󰚰  | s | Sync plugins                       | Lazy sync',
+          '󰋚  | o | Recent Files                       | FzfLua oldfiles',
+          '󰋚  | i | Recent Commands                    | FzfLua command_history',
+          '  | q | Quit                               | q',
         }
+        setmetatable(items, {
+          __index = {
+            len = function(len)
+              local incr = 0
+              for _ in pairs(len) do incr = incr + 1 end
+            return incr
+            end
+          }
+        })
 
-        require('dashboard').setup {
-          theme = 'doom',
-          config = {
-            header = center_header(
-              {
-                '///',
-                '      ',
+        local header = center_header(
+          {
+            [[                                    /\                                 ]],
+            [[                               /\  //\\                                ]],
+            [[                        /\    //\\///\\\        /\                     ]],
+            [[                       //\\  ///\////\\\\  /\  //\\                    ]],
+            [[          /\          /  ^ \/^ ^/^  ^  ^ \/^ \/  ^ \                   ]],
+            [[         / ^\    /\  / ^   /  ^/ ^ ^ ^   ^\ ^/  ^^  \                  ]],
+            [[        /^   \  / ^\/ ^ ^   ^ / ^  ^    ^  \/ ^   ^  \       ^         ]],
+            [[       /  ^ ^ \/^  ^\ ^ ^ ^   ^  ^   ^   ____  ^   ^  \     /|\        ]],
+            [[      / ^ ^  ^ \ ^  _\___________________|  |_____^ ^  \   /|||\       ]],
+            [[     / ^^  ^ ^ ^\  /______________________________\ ^ ^ \ /|||||\      ]],
+            [[    /  ^  ^^ ^ ^  /________________________________\  ^  /|||||||\     ]],
+            [[   /^ ^  ^ ^^  ^    ||___|___||||||||||||___|__|||      /|||||||||\    ]],
+            [[  / ^   ^   ^    ^  ||___|___||||||||||||___|__|||          | |        ]],
+            [[ / ^ ^ ^  ^  ^  ^   ||||||||||||||||||||||||||||||~~~~~~~~~~| |~~~~~~~ ]],
+            [[ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ]],
+          }, items:len()
+        )
+
+        local function trim(s)
+          return (s:gsub("^%s*(.-)%s*$", "%1"))
+        end
+        local function get_item(str, n)
+          local parts = {}
+          for part in string.gmatch(str, "([^|]+)") do
+            table.insert(parts, trim(part))
+          end
+
+          return parts[n]
+        end
+
+        for _,v in pairs(items) do
+          local icon = get_item(v, 1)
+          local shortcut = get_item(v, 2)
+          local title = get_item(v, 3)
+          local action = function()
+            if icon == trim(dir_icon) then
+              vim.cmd(get_item(v, 4) .. ' | cd %:p:h')
+            else
+              vim.cmd(get_item(v, 4))
+            end
+          end 
+
+          if shortcut == nil or shortcut == '' then
+            if title then
+              table.insert(body, {
+                type = 'text',
+                val = title .. string.rep(' ', width - title:len()),
+                opts = { position = 'center', hl = 'IblIndent' }
+              })
+            end
+            table.insert(body, { type = 'padding', val = 1 })
+          else
+            table.insert(body, {
+              type = 'button',
+              val = string.format(' %s  %s', get_item(v, 1), title),
+              on_press = action,
+              opts = {
+               keymap = { 'n', shortcut, action },
+                shortcut = '[' .. shortcut .. ']',
+                align_shortcut = 'left',
+                position = 'center',
+                hl = 'LineNr',
+                hl_shortcut = 'Number',
+                cursor = 1,
+                width = width,
+                shrink_margin = true
               }
-            ),
-            center = {
-              {
-                icon = '  ',
-                icon_hl = 'Title',
-                desc_hl = 'Title',
-                key_hl = 'Number',
-                desc = 'Edit init.lua',
-                key = 'e',
-                key_format = '<%s>',
-                action = ':e ~/.config/nvim/init.lua'
-              },
-              {
-                icon = '  ',
-                desc = 'History           ',
-                key = 'h',
-                key_hl = 'Number',
-                key_format = '<%s>',
-                action = 'FzfLua oldfiles'
-              },
-              {
-                icon = '  ',
-                desc = 'Find File           ',
-                key = 'f',
-                key_hl = 'Number',
-                key_format = '<%s>',
-                action = 'FzfLua files'
-              },
-              {
-                icon = '  ',
-                desc = 'Sync Plugins',
-                key = 's',
-                key_hl = 'Number',
-                key_format = '<%s>',
-                action = 'Lazy sync'
-              },
-              {
-                icon = '  ',
-                desc = 'Fzf Lua',
-                key = 's',
-                key_hl = 'Number',
-                key_format = '<%s>',
-                action = 'Lazy sync'
-              },
-            },
-            footer = {}  --your footer
+            })
+          end
+        end
 
-          },
+        require("alpha").setup {
+          opts = { noautocmd = true },
+          layout = {
+            { type = 'text', val = header, opts = { position = 'center', hl = 'LineNr' } },
+            { type = 'padding', val = 1 },
+            { type = 'text', val = datetime, opts = { position = 'center', hl = 'LineNr' } },
+            { type = 'group', val = body, spacing = 1 },
+            { type = 'padding', val = 2 },
+            { type = 'text', val = ' ' .. vim.loop.cwd(), opts = { position = 'center', hl = 'LineNr' } },
+            { type = 'text', val = lazy.stats().count .. ' plugins loaded', opts = { position = 'center', hl = 'LineNr' } },
+          }
         }
       end
     },
@@ -221,11 +282,11 @@ require("lazy").setup({
       config = function()
         function set_fzf_keymap(key, func)
           vim.keymap.set(
-            'n', '<leader>' .. key,
-            function()
-              require('fzf-lua')[func]()
-            end,
-            { noremap = true, silent = true }
+          'n', '<leader>' .. key,
+          function()
+            require('fzf-lua')[func]()
+          end,
+          { noremap = true, silent = true }
           )
         end
 
@@ -254,7 +315,7 @@ require("lazy").setup({
           },
           grep = {
             actions = {
-              ["ctrl-r"] =  actions.toggle_ignore,
+              ["ctrl-g"] =  actions.toggle_ignore,
             }
           }
         }

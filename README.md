@@ -51,12 +51,6 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # In a tmux session install with prefix + I
 ```
 
-## emacs
-
-```bash
-cp -r dotfiles/emacs24_config ~/.emacs.d
-```
-
 ## vim
 
 ```bash
