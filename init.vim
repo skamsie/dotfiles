@@ -40,8 +40,9 @@ call plug#end()
 
 "-- NEOVIM SPECIFIC--
 "https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
+"use python 3.6 for NNN to work
+let g:python3_host_prog = '/Users/AlexandruDimian/.pyenv/versions/venv3.6/bin/python'
 let g:loaded_python_provider = 0
-let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim3/bin/python'
 
 "-- SETTINGS --
 syntax enable
@@ -91,10 +92,11 @@ set nohlsearch
 "-- COLORSCHEME --
 
 let g:solarized_termtrans = 1
-let g:solarized_contrast = "high"
-let g:solarized_visibility= "high"
+"let g:solarized_contrast = "high"
+"let g:solarized_visibility = "high"
 
 colorscheme solarized
+
 
 "-- AIRLINE --
 let g:airline#extensions#tabline#fnamemod = ':t'
