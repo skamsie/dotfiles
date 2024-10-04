@@ -30,7 +30,18 @@ vim.api.nvim_set_keymap('n', '<c-h>', '<c-w><', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>>', { noremap = true })
 
 vim.cmd [[
-  autocmd User AlphaReady set laststatus=0 | autocmd BufUnload <buffer> set laststatus=2
+  " do not show status line in alpha
+  autocmd User AlphaReady set laststatus=0
+  autocmd BufUnload <buffer> set laststatus=2
+
+
+  " highlight all matches only while searching otherwise
+  " vim-searchhi clashes with vim-closetag
+  augroup vimrc-incsearch-highlight
+    autocmd!
+    autocmd CmdlineEnter /,\? :set hlsearch
+    autocmd CmdlineLeave /,\? :set nohlsearch
+  augroup END
 
   " scroll by 10 percent
   function s:scroll(direction)

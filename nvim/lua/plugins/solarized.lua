@@ -24,6 +24,8 @@ return {
 
       return {
         -- EndOfBuffer = { fg = colors.magenta },
+        AlphaHeader = { fg= '#355b63' },
+        AlphaHeaderLabel = { link = '@markup' },
         Boolean = { fg = colors.magenta },
         Changed = { fg = colors.yellow },
         Comment = { italic = true },
