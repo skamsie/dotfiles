@@ -12,8 +12,8 @@ local items = {
   '   |   | Actions                               |',
   '󰚰  | s | Sync plugins                          | Lazy sync',
   '  | f | Find File                             | FzfLua files',
-  '󰋚  | h | History (files)                       | FzfLua oldfiles',
-  '󰋚  | i | History (commands)                    | FzfLua command_history',
+  '󰋚  | h | History                               | FzfLua oldfiles',
+  '󰋚  | c | Commands history                      | FzfLua command_history',
   '  | q | Quit                                  | q',
 }
 

@@ -1,6 +1,6 @@
 {
   "alpha-nvim": { "branch": "main", "commit": "bf3c8bb8c02ed3d9644cc5bbc48e2bdc39349cd7" },
-  "fzf-lua": { "branch": "main", "commit": "ebb89e4e4065e31b029eee8f618e1ca660f41f35" },
+  "fzf-lua": { "branch": "main", "commit": "ace9968be267b034e450be4feaf6e9107bc34fbd" },
   "lazy.nvim": { "branch": "main", "commit": "1159bdccd8910a0fd0914b24d6c3d186689023d9" },
   "solarized.nvim": { "branch": "main", "commit": "f85f000c3e46714fee52cee3adf9f9661a048e40" },
   "vim-closetag": { "branch": "master", "commit": "d0a562f8bdb107a50595aefe53b1a690460c3822" },
