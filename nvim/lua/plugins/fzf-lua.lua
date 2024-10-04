@@ -19,29 +19,29 @@ return {
     -- calling `setup` is optional for customization
     local actions = require 'fzf-lua.actions'
     require("fzf-lua").setup(
-    {
-      winopts = {
-        row = 0.5,
-        col = 0.5,
-        width = 0.8,
-        height = 0.8,
-        border = 'single',
-        prompt = 'B'
-      },
-      fzf_opts = { ['--layout'] = 'default' },
-      defaults = { file_icons = false },
-      files = {
-        winopts = { preview = { delay = 10 } }
-      },
-      oldfiles = {
-        winopts = { preview = { delay = 10 } }
-      },
-      grep = {
-        actions = {
-          ["ctrl-g"] =  actions.toggle_ignore,
+      {
+        winopts = {
+          row = 0.5,
+          col = 0.5,
+          width = 0.8,
+          height = 0.8,
+          border = 'single',
+          prompt = 'B'
+        },
+        fzf_opts = { ['--layout'] = 'default' },
+        defaults = { file_icons = false },
+        files = {
+          winopts = { preview = { delay = 10 } }
+        },
+        oldfiles = {
+          winopts = { preview = { delay = 10 } }
+        },
+        grep = {
+          actions = {
+            ["ctrl-g"] =  actions.toggle_ignore,
+          }
         }
       }
-    }
     )
   end
 }

@@ -56,18 +56,16 @@ local winter_ascii_art = {
 -- switch to winter_ascii in December :)
 if os.date('%m')  == '12' then ascii_art = winter_ascii_art end
 
--- right | left
-local align_shortcut = 'left'
-
--- this is only used to determine if we should also change
--- the working directory before the command. It should match the items from
--- the items table for it to work
-local dir_icon = ' '
-
--- set colors
-local hl_selection = 'AlphaHeaderLabel'
-local hl_header = 'AlphaHeader'
-local hl_normal = 'LineNr'
+local settings = {
+  -- right | left
+  align_shortcut = 'left',
+  current_line_highlight = true,
+  -- also change dir if this icon is set
+  dir_icon = ' ',
+  hl_selection = 'AlphaHeaderLabel',
+  hl_header = 'AlphaHeader',
+  hl_normal = 'LineNr'
+}
 
 -- add a function len() to retrieve the number of items
 -- used for centering content vertically
@@ -97,7 +95,7 @@ end
 -- use to set width (automatically centered)
 local function longest_item_text_len(items)
   local text_len = 1
-  local padding = align_shortcut == 'left' and 4 or 6 
+  local padding = settings.align_shortcut == 'left' and 4 or 6 
 
   for _,v in pairs(items) do
     local v_len = #(get_item(v, 1)) + #(get_item(v, 2)) + #(get_item(v, 3))
@@ -110,47 +108,54 @@ local function longest_item_text_len(items)
   return text_len + padding
 end
 
+local function highligh_current_line(alpha)
+  if settings.current_line_highlight == false then return end
+
+  -- Create a dedicated namespace for our highlights
+  local highlight_ns = vim.api.nvim_create_namespace('CursorLineHighlight')
+
+  local function highlight_line(line_number, hl_group)
+    -- Adjust the line number to 0-based for highlighting
+    vim.api.nvim_buf_add_highlight(0, highlight_ns, 'CursorLineTemp', line_number - 1, 0, -1)
+    vim.cmd(string.format('highlight link CursorLineTemp %s', hl_group))
+  end
+  -- Hook into alpha.move_cursor and add line highlighting
+  local alpha_move_cursor_original = alpha.move_cursor
+  function alpha.move_cursor(window)
+    -- Get the current line before moving the cursor
+    local current_line = vim.api.nvim_win_get_cursor(window)[1]
+    -- Call the original alpha move cursor function
+    alpha_move_cursor_original(window)
+    -- After alpha moves the cursor, get the new line number
+    local new_line = vim.api.nvim_win_get_cursor(window)[1]
+    -- Clear previous highlights from the highlight namespace
+    vim.api.nvim_buf_clear_namespace(0, highlight_ns, 0, -1)
+    -- Highlight the new current line
+    highlight_line(new_line, settings.hl_selection)
+  end
+end
+
 return {
   'goolord/alpha-nvim',
+  keys = { { '<leader>s', ':Alpha<cr>', desc = 'Trigger dashboard' } },
+  event = 'VimEnter',
   config = function()
+    vim.api.nvim_set_keymap('n', '<leader>a', ':Alpha<CR>', { noremap = true, silent = true })
+
+    highligh_current_line(require('alpha'))
+
     local plugins_count = require('lazy').stats().count
-    local alpha = require('alpha')
     local datetime = os.date(' %d-%m-%Y')
     local home = os.getenv('HOME')
     local pwd = vim.loop.cwd():gsub(home, '~')
     local width = longest_item_text_len(items)
-    local cursor_position = align_shortcut == 'left' and 1 or width - 2
+    local cursor_position = settings.align_shortcut == 'left' and 1 or width - 2
 
     if pwd == '~' then pwd = ' ' .. home end
 
     -- Change the highlight of the current line
-    -- To disable, simply comment until 'Implementation END'
     -- Create an autocommand group for handling the dynamic line color changes
     local group = vim.api.nvim_create_augroup('CursorLineColorChange', { clear = true })
-
-    -- Create a dedicated namespace for our highlights
-    local highlight_ns = vim.api.nvim_create_namespace('CursorLineHighlight')
-
-    local function highlight_line(line_number, hl_group)
-      -- Adjust the line number to 0-based for highlighting
-      vim.api.nvim_buf_add_highlight(0, highlight_ns, 'CursorLineTemp', line_number - 1, 0, -1)
-      vim.cmd(string.format('highlight link CursorLineTemp %s', hl_group))
-    end
-    -- Hook into alpha.move_cursor and add line highlighting
-    local alpha_move_cursor_original = alpha.move_cursor
-    function alpha.move_cursor(window)
-      -- Get the current line before moving the cursor
-      local current_line = vim.api.nvim_win_get_cursor(window)[1]
-      -- Call the original alpha move cursor function
-      alpha_move_cursor_original(window)
-      -- After alpha moves the cursor, get the new line number
-      local new_line = vim.api.nvim_win_get_cursor(window)[1]
-      -- Clear previous highlights from the highlight namespace
-      vim.api.nvim_buf_clear_namespace(0, highlight_ns, 0, -1)
-      -- Highlight the new current line
-      highlight_line(new_line, hl_selection)
-    end
-    -- Implementation END
 
     local function generate_empty_lines(size)
       local fill = {}
@@ -176,7 +181,7 @@ return {
         local shortcut = get_item(v, 2)
         local title = get_item(v, 3)
         local action = function()
-          if icon == trim(dir_icon) then
+          if icon == trim(settings.dir_icon) then
             vim.cmd(get_item(v, 4) .. ' | cd %:p:h')
           else
             vim.cmd(get_item(v, 4))
@@ -189,7 +194,7 @@ return {
               type = 'text',
               -- align a bit to the left to be same with the other items
               val = title .. string.rep(' ', width - title:len() - 1),
-              opts = { position = 'center', hl = hl_header }
+              opts = { position = 'center', hl = settings.hl_header }
             })
           end
           -- insert padding for empty row
@@ -202,10 +207,10 @@ return {
             opts = {
               keymap = { 'n', shortcut, action },
               shortcut = '[' .. shortcut .. ']',
-              align_shortcut = align_shortcut,
+              align_shortcut = settings.align_shortcut,
               position = 'center',
-              hl = hl_normal,
-              hl_shortcut = {{hl_selection, 1, 2}},
+              hl = settings.hl_normal,
+              hl_shortcut = { { settings.hl_selection, 1, 2 } },
               cursor = cursor_position,
               width = width,
               shrink_margin = true
@@ -221,15 +226,15 @@ return {
       opts = { noautocmd = true },
       layout = {
         -- ascii art
-        { type = 'text', val = ascii_art, opts = { position = 'center', hl = hl_normal } },
+        { type = 'text', val = ascii_art, opts = { position = 'center', hl = settings.hl_normal } },
         { type = 'padding', val = 1 },
         -- first header line
-        { type = 'text', val = pwd, opts = { position = 'center', hl = hl_header } },
+        { type = 'text', val = pwd, opts = { position = 'center', hl = settings.hl_header } },
         -- second header line
         {
           type = 'text',
           val = datetime .. ' | ' .. plugins_count .. ' plugins loaded',
-          opts = { position = 'center', hl = hl_header }
+          opts = { position = 'center', hl = settings.hl_header }
         },
         -- body
         { type = 'group', val = content(), spacing = 1 },
