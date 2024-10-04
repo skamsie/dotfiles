@@ -1,4 +1,61 @@
--- Nvim dashboard / greeter
+-- Nvim dashboard
+
+local items = {
+  -- icon | key | title | command to execute
+  -- empty columns means padding row
+  '   |   |                                       |',
+  '   |   | Bookmarks                             |',
+  '  | a | ~/.alacritty.toml                     | e ~/.alacritty.toml',
+  '  | u | ~/.zshrc                              | e ~/.zshrc',
+  '  | e | ~/.config/nvim/init.lua               | e ~/.config/nvim/init.lua',
+  '  | p | ~/.config/nvim/lua/plugins            | e ~/.config/nvim/lua/plugins',
+  '  | c | ~/github/skamsie/casetofoane          | e ~/github/skamsie/casetofoane',
+  '   |   |                                       |',
+  '   |   | Actions                               |',
+  '󰚰  | s | Sync plugins                          | Lazy sync',
+  '  | f | Find File                             | FzfLua files',
+  '󰋚  | o | Recent Files                          | FzfLua oldfiles',
+  '󰋚  | i | Recent Commands                       | FzfLua command_history',
+  '  | q | Quit                                  | q',
+}
+
+local header = {
+  [[                                    /\                                 ]],
+  [[                               /\  //\\                                ]],
+  [[                        /\    //\\///\\\        /\                     ]],
+  [[                       //\\  ///\////\\\\  /\  //\\                    ]],
+  [[          /\          /  ^ \/^ ^/^  ^  ^ \/^ \/  ^ \                   ]],
+  [[         / ^\    /\  / ^   /  ^/ ^ ^ ^   ^\ ^/  ^^  \                  ]],
+  [[        /^   \  / ^\/ ^ ^   ^ / ^  ^    ^  \/ ^   ^  \       ^         ]],
+  [[       /  ^ ^ \/^  ^\ ^ ^ ^   ^  ^   ^   ____  ^   ^  \     /|\        ]],
+  [[      / ^ ^  ^ \ ^  _\___________________|  |_____^ ^  \   /|||\       ]],
+  [[     / ^^  ^ ^ ^\  /______________________________\ ^ ^ \ /|||||\      ]],
+  [[    /  ^  ^^ ^ ^  /________________________________\  ^  /|||||||\     ]],
+  [[   /^ ^  ^ ^^  ^    ||___|___||||||||||||___|__|||      /|||||||||\    ]],
+  [[  / ^   ^   ^    ^  ||___|___||||||||||||___|__|||          | |        ]],
+  [[ / ^ ^ ^  ^  ^  ^   ||||||||||||||||||||||||||||||~~~~~~~~~~| |~~~~~~~ ]],
+  [[ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ]],
+}
+
+-- winter edition
+--local header = {
+--  [[                                    /\                                 ]],
+--  [[                               /\  //\\                                ]],
+--  [[                        /\    //\\///\\\        /\                     ]],
+--  [[                       //\\  ///\////\\\\  /\  //\\                    ]],
+--  [[          /\          /  ^ \/^ ^/^  ^  ^ \/^ \/  ^ \                   ]],
+--  [[         / ^\    /\  / ^   /  ^/ ^ ^ ^   ^\ ^/  ^^  \                  ]],
+--  [[        /^   \  / ^\/ ^ ^   ^ / ^  ^    ^  \/ ^   ^  \       󰓎         ]],
+--  [[       /  ^ ^ \/^  ^\ ^ ^ ^  ^   ^    ^  ____  ^   ^  \     /|\        ]],
+--  [[      / ^ ^  ^ \ ^  _\___________________|  |_____^ ^  \   /||o\       ]],
+--  [[     / ^^  ^ ^ ^\  /______________________________\ ^ ^ \ /|o|||\      ]],
+--  [[    /  ^  ^^ ^ ^  /________________________________\  ^  /|||||o|\     ]],
+--  [[   /^ ^  ^ ^^  ^    ||___|___||||||||||||___|__|||      /||o||||||\    ]],
+--  [[  / ^   ^   ^    ^  ||___|___||||||||||||___|__|||          | |        ]],
+--  [[ / ^ ^ ^  ^  ^  ^   ||||||||||||||||||||||||||||||oooooooooo| |ooooooo ]],
+--  [[ ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo ]],
+--}
+
 return {
   'goolord/alpha-nvim',
   config = function()
@@ -58,23 +115,6 @@ return {
       return vim.list_extend(fill, header)
     end
 
-    local items = {
-      '   |   |                                       |',
-      '   |   | Bookmarks                             |',
-      '  | a | ~/.alacritty.toml                     | e ~/.alacritty.toml',
-      '  | u | ~/.zshrc                              | e ~/.zshrc',
-      '  | e | ~/.config/nvim/init.lua               | e ~/.config/nvim/init.lua',
-      '  | p | ~/.config/nvim/lua/plugins            | e ~/.config/nvim/lua/plugins',
-      '  | c | ~/github/skamsie/casetofoane          | e ~/github/skamsie/casetofoane',
-      '   |   |                                       |',
-      '   |   | Actions                               |',
-      '󰚰  | s | Sync plugins                          | Lazy sync',
-      '  | f | Find File                             | FzfLua files',
-      '󰋚  | o | Recent Files                          | FzfLua oldfiles',
-      '󰋚  | i | Recent Commands                       | FzfLua command_history',
-      '  | q | Quit                                  | q',
-    }
-
     setmetatable(items, {
       __index = {
         len = function(len)
@@ -85,25 +125,7 @@ return {
       }
     })
 
-    local header = center_header(
-    {
-      [[                                    /\                                 ]],
-      [[                               /\  //\\                                ]],
-      [[                        /\    //\\///\\\        /\                     ]],
-      [[                       //\\  ///\////\\\\  /\  //\\                    ]],
-      [[          /\          /  ^ \/^ ^/^  ^  ^ \/^ \/  ^ \                   ]],
-      [[         / ^\    /\  / ^   /  ^/ ^ ^ ^   ^\ ^/  ^^  \                  ]],
-      [[        /^   \  / ^\/ ^ ^   ^ / ^  ^    ^  \/ ^   ^  \       ^         ]],
-      [[       /  ^ ^ \/^  ^\ ^ ^ ^   ^  ^   ^   ____  ^   ^  \     /|\        ]],
-      [[      / ^ ^  ^ \ ^  _\___________________|  |_____^ ^  \   /|||\       ]],
-      [[     / ^^  ^ ^ ^\  /______________________________\ ^ ^ \ /|||||\      ]],
-      [[    /  ^  ^^ ^ ^  /________________________________\  ^  /|||||||\     ]],
-      [[   /^ ^  ^ ^^  ^    ||___|___||||||||||||___|__|||      /|||||||||\    ]],
-      [[  / ^   ^   ^    ^  ||___|___||||||||||||___|__|||          | |        ]],
-      [[ / ^ ^ ^  ^  ^  ^   ||||||||||||||||||||||||||||||~~~~~~~~~~| |~~~~~~~ ]],
-      [[ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ]],
-    }, items:len()
-    )
+    local header = center_header(header, items:len())
 
     local function trim(s)
       return (s:gsub("^%s*(.-)%s*$", "%1"))
