@@ -26,7 +26,8 @@ return {
           width = 0.8,
           height = 0.8,
           border = 'single',
-          prompt = 'B'
+          prompt = 'B',
+          backdrop = 100
         },
         fzf_opts = { ['--layout'] = 'default' },
         defaults = { file_icons = false },

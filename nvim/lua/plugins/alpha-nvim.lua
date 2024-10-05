@@ -1,11 +1,47 @@
 -- Nvim dashboard
 
+vim.cmd("rshada")
+
+local function get_last_edited_file(max_len)
+  local home = vim.fn.expand("$HOME")
+
+  local oldfiles = vim.v.oldfiles
+
+  if #oldfiles == 0 then return nil end
+
+  local last_file = oldfiles[1]
+
+  if last_file:find(home, 1, true) then
+    last_file = last_file:gsub(home, "~")
+  end
+
+  local original = last_file
+
+  max_len = max_len or 30
+
+  local shortened = last_file
+
+  if #last_file > max_len then
+    -- Split the remaining space for prefix
+    local prefix_len = math.floor((max_len - 3) / 2)
+    -- Calculate remaining for suffix
+    local suffix_len = max_len - 3 - prefix_len
+    local prefix = last_file:sub(1, prefix_len)
+    local suffix = last_file:sub(-suffix_len)
+    shortened = prefix .. "..." .. suffix
+  end
+
+  return { original = original, shortened = shortened }
+end
+
+local o = get_last_edited_file()
+
 local items = {
   -- icon | key | title | command
   '   |   |                                       |',
-  '   |   | Bookmarks                             |',
+  '   |   | Pinned                                |',
+  string.format('󰋚 | l | %s | e %s', o.shortened, o.original),
   '  | a | ~/.alacritty.toml                     | e ~/.alacritty.toml',
-  '  | u | ~/.zshrc                              | e ~/.zshrc',
   '  | e | ~/.config/nvim/init.lua               | e ~/.config/nvim/init.lua',
   '  | p | ~/.config/nvim/lua/plugins            | e ~/.config/nvim/lua/plugins',
   '   |   |                                       |',
@@ -64,7 +100,7 @@ local settings = {
   dir_icon = ' ',
   hl_selection = 'AlphaHeaderLabel',
   hl_header = 'AlphaHeader',
-  hl_normal = 'LineNr'
+  hl_normal = 'SpecialKey'
 }
 
 -- add a function len() to retrieve the number of items
@@ -139,9 +175,8 @@ return {
   'goolord/alpha-nvim',
   keys = { { '<leader>s', ':Alpha<cr>', desc = 'Trigger dashboard' } },
   event = 'VimEnter',
+  lazy = false,
   config = function()
-    vim.api.nvim_set_keymap('n', '<leader>a', ':Alpha<CR>', { noremap = true, silent = true })
-
     highligh_current_line(require('alpha'))
 
     local plugins_count = require('lazy').stats().count
@@ -193,7 +228,7 @@ return {
             table.insert(body, {
               type = 'text',
               -- align a bit to the left to be same with the other items
-              val = title .. string.rep(' ', width - title:len() - 1),
+              val = title .. string.rep(' ', width - title:len()),
               opts = { position = 'center', hl = settings.hl_header }
             })
           end
@@ -222,8 +257,12 @@ return {
       return body
     end
 
+    local X = function()
+      print(vim.v.oldfiles[1])
+    end
+
     require("alpha").setup {
-      opts = { noautocmd = true },
+      opts = { noautocmd = false },
       layout = {
         -- ascii art
         { type = 'text', val = ascii_art, opts = { position = 'center', hl = settings.hl_normal } },

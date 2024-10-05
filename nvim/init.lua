@@ -1,14 +1,16 @@
+-- NVIM SETTINGS
+
+-- there are copy-paste issues with some programs if this
+-- is not set like this
 vim.fn.setenv('TERM', 'xterm-256color')
 
--- NVIM SETTINGS
 vim.g.mapleader = " "
 vim.cmd('filetype plugin on')
 vim.cmd('filetype indent on')
 vim.opt.matchpairs:append("<:>")
 vim.opt.swapfile = false
 vim.opt.updatetime = 500
-vim.opt.colorcolumn = "80"
-vim.opt.hidden = true
+vim.opt.colorcolumn = "80" vim.opt.hidden = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.expandtab = true
