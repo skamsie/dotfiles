@@ -17,11 +17,12 @@ local elements = {
   { type = 'd', icon = ' ', key = 'p', txt = '~/.config/nvim/lua/plugins' },
   { type = 'e' },
   { type = 't', txt = 'Actions' },
+  { type = 'a', icon = ' ', key = 'o', txt = 'Open current directory', cmd = "execute 'edit ' . getcwd()" },
   { type = 'a', icon = '󰚰 ', key = 's', txt = 'Sync plugins', cmd = 'Lazy sync' },
   { type = 'a', icon = ' ', key = 'f', txt = 'Find file', cmd = 'FzfLua files' },
   { type = 'a', icon = '󰋚 ', key = 'h', txt = 'History', cmd = 'FzfLua oldfiles' },
   { type = 'a', icon = '󰋚 ', key = 'c', txt = 'Commands history', cmd = 'FzfLua command_history' },
-  { type = 'a', icon = ' ', key = 'q', txt = 'Quit', cmd = 'q' },
+  { type = 'a', icon = ' ', key = 'q', txt = 'Quit', cmd = 'qa' },
 }
 
 local settings = {
@@ -73,23 +74,46 @@ local winter_ascii_art = {
 }
 
 local function get_oldfile(idx)
-  local home = vim.fn.expand("$HOME")
+  local home = vim.fn.expand('$HOME')
   local oldfiles = vim.v.oldfiles
-  if #oldfiles == 0 then return nil end
-  local last_file = oldfiles[idx]
+  local empty = { original = '', shortened = '' }
+  if #oldfiles == 0 then return empty end
 
+  -- Check if file exists and is a regular file
+  local function file_exists(filepath)
+    local stat = vim.loop.fs_stat(filepath)
+    return stat and stat.type == 'file' -- Only return true for regular files
+  end
+
+  local last_file
+  local current_idx = idx
+
+  -- Loop to find the next existing file
+  while current_idx <= #oldfiles do
+    last_file = oldfiles[current_idx]
+    
+    if file_exists(last_file) then
+      break -- Found a valid file, exit loop
+    else
+      current_idx = current_idx + 1 -- Check the next file
+    end
+  end
+
+  -- If no valid file found, return empty
+  if not last_file or not file_exists(last_file) then return empty end
+
+  -- Replace the home directory with '~'
   if last_file:find(home, 1, true) then
-    last_file = last_file:gsub(home, "~")
+    last_file = last_file:gsub(home, '~')
   end
 
   local original = last_file
-  max_len = settings.oldfile_txt_max_len
+  local max_len = settings.oldfile_txt_max_len
   local shortened = last_file
 
   if #last_file > max_len then
     -- Split the remaining space for prefix
     local prefix_len = math.floor((max_len - 3) / 2)
-    -- Calculate remaining for suffix
     local suffix_len = max_len - 3 - prefix_len
     local prefix = last_file:sub(1, prefix_len)
     local suffix = last_file:sub(-suffix_len)
