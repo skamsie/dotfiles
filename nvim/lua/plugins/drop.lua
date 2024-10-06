@@ -1,5 +1,5 @@
 local enabled = true
-local start_after = 20000 -- 20 seconds
+local start_after = 60000 -- 1 minute
 
 function set_only_for_alpha()
   if not enabled then return end

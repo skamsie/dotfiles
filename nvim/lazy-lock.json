@@ -3,6 +3,7 @@
   "drop.nvim": { "branch": "main", "commit": "d2376ac1635eb71af699eda603f3dfe87c29a70d" },
   "fzf-lua": { "branch": "main", "commit": "ace9968be267b034e450be4feaf6e9107bc34fbd" },
   "lazy.nvim": { "branch": "main", "commit": "1159bdccd8910a0fd0914b24d6c3d186689023d9" },
+  "lualine.nvim": { "branch": "master", "commit": "b431d228b7bbcdaea818bdc3e25b8cdbe861f056" },
   "solarized.nvim": { "branch": "main", "commit": "f85f000c3e46714fee52cee3adf9f9661a048e40" },
   "vim-closetag": { "branch": "master", "commit": "d0a562f8bdb107a50595aefe53b1a690460c3822" },
   "vim-lineletters": { "branch": "master", "commit": "ba16f726cba2c0f7cf4c094408e17a3b605f0cc7" },
