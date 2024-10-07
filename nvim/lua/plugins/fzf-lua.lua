@@ -15,6 +15,7 @@ return {
     set_fzf_keymap('f', 'files')
     set_fzf_keymap('a', 'grep_project')
     set_fzf_keymap('h', 'oldfiles')
+    set_fzf_keymap('b', 'buffers')
 
     -- calling `setup` is optional for customization
     local actions = require 'fzf-lua.actions'

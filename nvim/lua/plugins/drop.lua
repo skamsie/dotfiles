@@ -1,5 +1,5 @@
 local enabled = true
-local start_after = 60000 -- 1 minute
+local start_after = 30000
 
 function set_only_for_alpha()
   if not enabled then return end
@@ -39,6 +39,7 @@ function set_only_for_alpha()
   })
 end
 
+-- putting this iside 'config = function()...' did not work for some reason
 set_only_for_alpha()
 
 return {
@@ -51,9 +52,10 @@ return {
       interval = 200,
       winblend = 100,
       theme = {
-        symbols = { '󰌪', '' }, colors = { '#6b8287' },
+        symbols = { '󰌪', '' },
+        colors = { '#6b8287' },
       },
-      filetypes = {}
+      filetypes = { }
     },
   }
 }

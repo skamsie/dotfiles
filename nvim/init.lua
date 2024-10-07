@@ -26,15 +26,13 @@ vim.g.netrw_preview = 1
 vim.g.netrw_liststyle = 3
 vim.g.netrw_winsize = 33
 vim.g.netrw_localrmdir = 'rm -rf'
+vim.g.netrw_keepj = ''
 
 -- Resize vertical split
 vim.api.nvim_set_keymap('n', '<c-h>', '<c-w><', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>>', { noremap = true })
 
 vim.cmd [[
-  autocmd User AlphaReady set laststatus=0
-  autocmd BufUnload <buffer> set laststatus=2
-
   " scroll by 10 percent
   function s:scroll(direction)
     let l:h = float2nr(0.1 * winheight('%'))

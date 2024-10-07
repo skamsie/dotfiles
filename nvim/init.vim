@@ -229,7 +229,6 @@ let g:coc_global_extensions = [
       \ 'coc-solargraph',
       \ 'coc-html',
       \ 'coc-css',
-      \ 'coc-clangd'
       \ ]
 
 " -- MAPPINGS --

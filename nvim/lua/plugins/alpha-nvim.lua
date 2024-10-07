@@ -91,7 +91,7 @@ local function get_oldfile(idx)
   -- Loop to find the next existing file
   while current_idx <= #oldfiles do
     last_file = oldfiles[current_idx]
-    
+
     if file_exists(last_file) then
       break -- Found a valid file, exit loop
     else
@@ -128,7 +128,7 @@ local function update_elements_with_oldfile(elements)
   for _, element in ipairs(elements) do
     if element.type == 'o' and element.idx then
       local oldfile = get_oldfile(element.idx)
-      
+
       if oldfile then
         element.txt = oldfile.shortened
         element.cmd = 'e ' .. oldfile.original
@@ -162,7 +162,7 @@ end
 -- use to set width (automatically centered)
 local function longest_item_text_len(items)
   local text_len = 0
-  local padding = settings.align_shortcut == 'left' and 4 or 6 
+  local padding = settings.align_shortcut == 'left' and 4 or 6
 
   for _,v in pairs(items) do
     local v_len = #(v.icon or '') + #(v.key or '') + #(v.txt or '')
@@ -208,6 +208,24 @@ return {
   event = 'VimEnter',
   lazy = false,
   config = function()
+
+    -- hide statusline when entering then set it again
+    vim.api.nvim_create_autocmd({ "FileType" }, {
+      pattern = "alpha",
+      callback = function()
+        vim.opt.laststatus = 0
+      end,
+    })
+
+    vim.api.nvim_create_autocmd({ "BufLeave" }, {
+      pattern = "*",
+      callback = function()
+        if vim.bo.filetype == "alpha" then
+          vim.opt.laststatus = 2
+        end
+      end,
+    })
+
     highligh_current_line(require('alpha'))
 
     local plugins_count = require('lazy').stats().count
@@ -249,9 +267,9 @@ return {
           elseif v.type == 'a' or v.type == 'o' then
             vim.cmd(v.cmd)
           end
-        end 
+        end
 
-        local padding = settings.align_shortcut == 'right' and 2 or 0 
+        local padding = settings.align_shortcut == 'right' and 2 or 0
 
         if shortcut == nil or shortcut == '' then
           if title then
