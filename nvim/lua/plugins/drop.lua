@@ -1,4 +1,4 @@
-local enabled = true
+local enabled = false
 local start_after = 30000
 
 function set_only_for_alpha()

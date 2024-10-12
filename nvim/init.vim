@@ -85,18 +85,17 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-"search highlight
 set incsearch
-set nohlsearch
+
+"set nohlsearch
+"search highlight
 
 "-- COLORSCHEME --
-
 let g:solarized_termtrans = 1
 "let g:solarized_contrast = "high"
 "let g:solarized_visibility = "high"
 
 colorscheme solarized
-
 
 "-- AIRLINE --
 let g:airline#extensions#tabline#fnamemod = ':t'
@@ -229,6 +228,7 @@ let g:coc_global_extensions = [
       \ 'coc-solargraph',
       \ 'coc-html',
       \ 'coc-css',
+      \ 'coc-clangd',
       \ ]
 
 " -- MAPPINGS --
@@ -265,15 +265,6 @@ let g:signify_sign_change = '~'
 let g:signify_sign_show_count = 0
 autocmd User SignifyAutocmds autocmd! signify FocusGained
 
-" -- WIKI --
-hi! link VimwikiHeader2 Type
-hi! link VimwikiHeader3 Conditional
-
-let wiki = {}
-let wiki.path = '~/wiki/'
-let wiki.nested_syntaxes = {'ruby': 'ruby'}
-let g:vimwiki_list = [wiki]
-
 "-- LINELETTERS --
 let g:lineletters_settings = {
       \ 'highlight_group': 'MoreMsg',
@@ -284,8 +275,8 @@ map <silent>, <Plug>LineLetters
 "-- MISC --
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
 let g:html_indent_inctags = 'html,body,head,tbody,p,nav'
-let g:searchant_all = 0
-let g:searchant_map_stop = 0
+"let g:searchant_all = 0
+"let g:searchant_map_stop = 0
 command! Gblame Git<Space>blame
 
 " zoom on current window

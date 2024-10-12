@@ -1,7 +1,7 @@
---function trailing_whitespaces()
-  --  local space = vim.fn.search([[\s\+$]], 'nwc')
-  --  return space ~= 0 and "TW:"..space or ""
-  --end
+function trailing_whitespaces()
+  local space = vim.fn.search([[\s\+$]], 'nwc')
+  return space ~= 0 and "TW:"..space or ""
+end
 
 return {
   'nvim-lualine/lualine.nvim',
@@ -10,8 +10,7 @@ return {
     local colors = require('colors.solarized')
 
     local custom_fname = require('lualine.components.filename'):extend()
-    local highlight = require'lualine.highlight'
-    local default_status_colors = { saved = '#228B22', modified = '#C70039' }
+    local highlight = require('lualine.highlight')
 
     function custom_fname:init(options)
       custom_fname.super.init(self, options)
@@ -36,15 +35,14 @@ return {
       options = {
         theme = {
           normal = {
-            a = { bg = colors.mix_blue, fg = colors.base0, gui = 'bold' },
-            b = { bg = colors.mix_base1, fg = colors.base1 },
-            c = { bg = colors.base02, fg = colors.gray }
+            a = { bg = colors.mix_blue, fg = colors.base3 },
+            b = { bg = colors.base2, fg = colors.base3 },
+            c = { bg = colors.base02, fg = colors.gray },
+            x = { bg = colors.base02, fg = colors.base2 }
           },
-          insert = {
-            a = { bg = colors.mix_yellow, fg = colors.base0, gui = 'bold' },
-            b = { bg = colors.mix_base1, fg = colors.base1 },
-            c = { bg = colors.base02, fg = colors.gray }
-          },
+          insert = { a = { bg = colors.diag_warning, fg = colors.base3 }, },
+          visual = { a = { bg = colors.dark_magenta, fg = colors.base3 }, },
+          replace = { a = { bg = colors.red, fg = colors.base3 }, },
         },
         icons_enabled = true,
         component_separators = { left = '|', right = '|'},
@@ -53,17 +51,40 @@ return {
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diagnostics' },
-        --        lualine_b = { 'diff',
-        --            { 'diagnostics', sources = { 'nvim_lsp', 'nvim_diagnostic' } },
-        --            function()
-          --                local space = vim.fn.search([[\s\+$]], 'nwc')
-          --                return space ~= 0 and "trailing:" .. space or ""
-          --            end },
-          lualine_c = { { custom_fname, path = 1 } },
-          lualine_x = { 'encoding', 'filetype' },
-          lualine_y = { 'progress' },
-          lualine_z = { 'location' }
+        lualine_c = { { custom_fname, path = 1 } },
+        lualine_x = { 'filetype' },
+        lualine_y = {
+          function()
+            local encoding = vim.bo.fileencoding or vim.o.encoding
+            local fileformat = vim.bo.fileformat
+            return string.format('%s[%s]', encoding, fileformat)
+          end
         },
+        lualine_z = {
+          {
+            -- show line_nr:col_nr progress% [total_lines]
+            function()
+              local line = vim.fn.line('.')
+              local col = vim.fn.col('.')
+              local total_lines = vim.fn.line('$')
+              local percent = math.floor((line / total_lines) * 100)
+              return string.format('%3d:%-2d %1d%%%% [%d]', line, col, percent, total_lines)
+            end
+          },
+          {
+            -- show trailing whitespace
+            color = { bg = colors.red },
+            function()
+              if vim.api.nvim_get_mode().mode == 'n' then
+                local space = vim.fn.search([[\s\+$]], 'nwc')
+                return space ~= 0 and string.format('☲ [%s] trailing', space) or ''
+              else
+                return ''
+              end
+            end
+          }
+        }
+      },
     })
   end
 }

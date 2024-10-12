@@ -2,7 +2,7 @@
 
 -- there are copy-paste issues with some programs if this
 -- is not set like this
-vim.fn.setenv('TERM', 'xterm-256color')
+-- vim.fn.setenv('TERM', 'xterm-256color')
 
 vim.g.mapleader = " "
 vim.cmd('filetype plugin on')
@@ -18,8 +18,9 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.incsearch = true
-vim.opt.hlsearch = false
 vim.opt.clipboard = "unnamed"
+vim.opt.termguicolors = true
+--vim.opt.hlsearch = false
 
 -- NETRW settings
 vim.g.netrw_preview = 1
@@ -32,18 +33,32 @@ vim.g.netrw_keepj = ''
 vim.api.nvim_set_keymap('n', '<c-h>', '<c-w><', { noremap = true })
 vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>>', { noremap = true })
 
+vim.fn.setenv("TERM", "xterm-256color")
+
 vim.cmd [[
   " scroll by 10 percent
-  function s:scroll(direction)
+  function CustomScroll(direction)
     let l:h = float2nr(0.1 * winheight('%'))
 
     execute "normal! " . l:h . (a:direction == 'down' ? "\<C-E>" : "\<C-Y>")
   endfunction
-
-  " Custom scroll
-  noremap <silent><c-u> :call <SID>scroll('up')<cr>
-  noremap <silent><c-d> :call <SID>scroll('down')<cr>
 ]]
+
+-- Custom scroll keymaps
+vim.api.nvim_set_keymap(
+  'n', '<C-u>', '', {
+    noremap = true,
+    silent = true,
+    callback = function() vim.fn.CustomScroll('up') end
+  }
+)
+vim.api.nvim_set_keymap(
+  'n', '<C-d>', '', {
+    noremap = true,
+    silent = true,
+    callback = function() vim.fn.CustomScroll('down') end
+  }
+)
 
 -- load plugins
 require('config.lazy')

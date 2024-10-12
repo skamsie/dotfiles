@@ -8,7 +8,7 @@ return {
     transparent = {
       enabled = true,         -- Master switch to enable transparency
       pmenu = true,           -- Popup menu (e.g., autocomplete suggestions)
-      normal = false,          -- Main editor window background
+      normal = true,          -- Main editor window background
       normalfloat = true,     -- Floating windows
       neotree = true,         -- Neo-tree file explorer
       nvimtree = true,        -- Nvim-tree file explorer
@@ -27,9 +27,10 @@ return {
         -- EndOfBuffer = { fg = colors.magenta },
         AlphaHeader = { fg = colors.mix_base1 },
         AlphaHeaderLabel = { fg = colors.violet },
+        Keyword = { fg = colors.green },
         Boolean = { fg = colors.magenta },
         Changed = { fg = colors.yellow },
-        Comment = { italic = true },
+        Comment = { fg = colors.base2, italic = true },
         Define = { fg = colors.green, bold = false },
         Identifier = { fg = colors.base0 },
         IncSearch = { bg = colors.red, fg = colors.base02, bold = false },
@@ -45,9 +46,11 @@ return {
         rubyPercentStringDelimiter = { fg = colors.violet },
         rubyString = { fg = colors.green },
         rubyStringDelimiter = { fg = colors.green },
+        rubyInstanceVariable = { link = 'Directory' },
         rubySymbol = { fg = colors.cyan },
         rubyConditional = { fg = colors.violet },
-        ExtraWhitespace = { bg = colors.red }
+        ExtraWhitespace = { bg = colors.red },
+        ['@keyword.function.lua'] = { link = 'Keyword' }
       }
     end
   },
