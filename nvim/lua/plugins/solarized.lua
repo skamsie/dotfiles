@@ -30,7 +30,7 @@ return {
         Keyword = { fg = colors.green },
         Boolean = { fg = colors.magenta },
         Changed = { fg = colors.yellow },
-        Comment = { fg = colors.base2, italic = true },
+        Comment = { fg = colors.base01, italic = true },
         Define = { fg = colors.green, bold = false },
         Identifier = { fg = colors.base0 },
         IncSearch = { bg = colors.red, fg = colors.base02, bold = false },

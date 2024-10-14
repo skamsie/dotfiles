@@ -1,8 +1,3 @@
-function trailing_whitespaces()
-  local space = vim.fn.search([[\s\+$]], 'nwc')
-  return space ~= 0 and "TW:"..space or ""
-end
-
 return {
   'nvim-lualine/lualine.nvim',
   enabled = true,
@@ -68,7 +63,7 @@ return {
               local col = vim.fn.col('.')
               local total_lines = vim.fn.line('$')
               local percent = math.floor((line / total_lines) * 100)
-              return string.format('%3d:%-2d %1d%%%% [%d]', line, col, percent, total_lines)
+              return string.format('%2d:%-1d %1d%%%% [%d]', line, col, percent, total_lines)
             end
           },
           {

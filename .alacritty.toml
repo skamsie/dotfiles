@@ -1,14 +1,11 @@
 [window]
-
 padding = { x = 4, y = 2 }
 
 [font]
-
 normal = { family = 'AkkuratMono Nerd Font', style = 'Regular' }
 
 offset = { x = 0, y = 2 }
 size = 12
-
 
 [colors.primary]
 background = '#002B36'
@@ -25,7 +22,7 @@ magenta = '#cf598e'
 
 # Bright colors
 [colors.bright]
-black   = '#4B93B5'
+black   = '#4b93b5'
 red     = '#cb4b16'
 green   = '#586e75'
 yellow  = '#b58802'
@@ -44,3 +41,4 @@ hide_when_typing = true
 [env]
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 TERM_ALACRITTY='true'
+#TERM='xterm-256color'

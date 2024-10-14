@@ -1,9 +1,4 @@
 -- NVIM SETTINGS
-
--- there are copy-paste issues with some programs if this
--- is not set like this
--- vim.fn.setenv('TERM', 'xterm-256color')
-
 vim.g.mapleader = " "
 vim.cmd('filetype plugin on')
 vim.cmd('filetype indent on')
@@ -20,7 +15,7 @@ vim.opt.softtabstop = 2
 vim.opt.incsearch = true
 vim.opt.clipboard = "unnamed"
 vim.opt.termguicolors = true
---vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 
 -- NETRW settings
 vim.g.netrw_preview = 1
