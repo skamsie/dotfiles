@@ -1,13 +1,7 @@
 {
   "suggest.minTriggerInputLength": 2,
   "suggest.snippetIndicator": ">",
-  "python.jediEnabled": true,
   "diagnostic.enable": true,
   "inlayHint.enable": false,
-  "languageserver": {
-     "elixirLS": {
-      "command": "/usr/local/bin/elixir-ls/language_server.sh",
-      "filetypes": ["elixir", "eelixir"]
-     }
-  }
+  "Lua.diagnostics.globals": ["vim"]
 }

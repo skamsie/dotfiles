@@ -1,5 +1,3 @@
--- Nvim dashboard
-
 -- we need this for the oldfiles command
 vim.cmd("rshada")
 

@@ -16,6 +16,7 @@ vim.opt.incsearch = true
 vim.opt.clipboard = "unnamed"
 vim.opt.termguicolors = true
 vim.opt.hlsearch = true
+vim.opt.showcmd = false
 
 -- NETRW settings
 vim.g.netrw_preview = 1
@@ -55,5 +56,5 @@ vim.api.nvim_set_keymap(
   }
 )
 
--- load plugins
 require('config.lazy')
+require('config.statusline')
