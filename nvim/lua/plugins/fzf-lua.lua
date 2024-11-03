@@ -2,7 +2,7 @@
 return {
   "ibhagwan/fzf-lua",
   config = function()
-    function set_fzf_keymap(key, func)
+    local function set_fzf_keymap(key, func)
       vim.keymap.set(
       'n', '<leader>' .. key,
       function()
@@ -31,6 +31,21 @@ return {
           backdrop = 100
         },
         fzf_opts = { ['--layout'] = 'default' },
+        fzf_colors = {
+          ['fg']          = { 'fg', 'CursorLine' },
+          ['bg']          = { 'bg', 'Normal' },
+          ['hl']          = { 'fg', 'Comment' },
+          ['fg+']         = { 'fg', 'Normal' },
+          ['bg+']         = { 'bg', 'CursorLine' },
+          ['hl+']         = { 'fg', 'Boolean' },
+          ['info']        = { 'fg', 'PreProc' },
+          ['prompt']      = { 'fg', 'Conditional' },
+          ['pointer']     = { 'fg', 'Exception' },
+          ['marker']      = { 'fg', 'Keyword' },
+          ['spinner']     = { 'fg', 'Label' },
+          ['header']      = { 'fg', 'Comment' },
+          ['gutter']      = '-1',
+        },
         defaults = { file_icons = false },
         files = {
           winopts = { preview = { delay = 10 } }
@@ -40,7 +55,7 @@ return {
         },
         grep = {
           actions = {
-            ["ctrl-g"] =  actions.toggle_ignore,
+            ['ctrl-g'] =  actions.toggle_ignore,
           }
         }
       }

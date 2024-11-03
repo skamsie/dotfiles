@@ -1,6 +1,6 @@
 return   {
   'norcalli/nvim-colorizer.lua',
-  enabled = true,
+  enabled = false,
   config = function()
     require 'colorizer'.setup({
       'css';

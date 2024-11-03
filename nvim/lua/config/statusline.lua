@@ -19,7 +19,6 @@ vim.api.nvim_set_hl(0, 'StatusLineInactive', { link = 'StatusLineNC' })
 
 -- Highlight pattern
 local hi_pattern = '%%#%s#%s%%*'
-
 local mode_map = {
   n      = { name = '󰰓 ', hl = 'StatusLineNormal' },
   i      = { name = '󰰄 ', hl = 'StatusLineInsert' },
@@ -79,7 +78,17 @@ function cmp.progress()
   local current_mode = vim.api.nvim_get_mode().mode
   local mode_info = mode_map[current_mode] or { name = current_mode, hl = 'Normal' }
 
-  return string.format('%%#%s# %2d:%-1d %1d%%%% [%d]', mode_info.hl, line, col, percent, total_lines)
+  -- Use 'Bot' for 100%, otherwise show the percentage with the % symbol
+  local percent_display = (percent == 100) and 'Bot' or string.format('%2d%%%%', percent)
+
+  return string.format(
+    '%%#%s# %2d:%-1d %s [%d]',
+    mode_info.hl,
+    line,
+    col,
+    percent_display,
+    total_lines
+  )
 end
 
 -- Function to show trailing whitespace
@@ -94,13 +103,37 @@ function cmp.trailing()
   return hi_pattern:format('StatusLineTrailing', result)
 end
 
+local function hl_str(hl, str)
+  return "%#" .. hl .. "#" .. str .. "%*"
+end
+
+function cmp.scrollbar()
+  local sbar_chars = { '█', '▇', '▆', '▅', '▄', '▃', '▂', '▁', ' ' }
+
+  local cur_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_line_count(0)
+
+  local sbar
+  if cur_line == 1 then
+    sbar = sbar_chars[1]
+  elseif cur_line == lines then
+    sbar = sbar_chars[#sbar_chars]
+  else
+    local i = math.floor((cur_line - 2) / (lines - 2) * (#sbar_chars - 2)) + 2
+    sbar = sbar_chars[i]
+  end
+
+  -- Repeat character for scrollbar width
+  return hl_str('Visual', string.rep(sbar, 2))
+end
+
 -- Build the statusline
 local statusline_active = {
   '%{%v:lua._statusline_component("mode_status")%}',
   '%{%v:lua._statusline_component("filename_active")%}',
   '%r',
   '%=',
-  '%{&filetype} ',
+  '%y',
   '%{%v:lua._statusline_component("progress")%}',
   '%{%v:lua._statusline_component("trailing")%}',
 }

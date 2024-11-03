@@ -13,7 +13,7 @@ return {
       vim.api.nvim_set_keymap('', ',', '<Plug>LineLetters', { silent = true })
     end
   },
-  {
+  { -- Run tests from vim
     'janko-m/vim-test',
     config = function()
       vim.g['test#strategy'] = 'neovim'
@@ -26,5 +26,35 @@ return {
       vim.g.searchhi_update_all_autocmds = 'InsertLeave'
       vim.keymap.set('n', '<C-C>', '<Plug>(searchhi-clear-all)', { silent = true })
     end
-  }
+  },
+  {
+    'skamsie/vim-yank-bank',
+    init = function()
+      vim.cmd[[
+        let g:yb_yank_registers = ["j", "k", "l"]
+        let g:yb_clip_registers = ["x", "y", "z"]
+      ]]
+    end
+  },
+  {
+    'mhinz/vim-signify',
+    config = function()
+      vim.cmd[[
+        let g:signify_sign_delete = '-'
+        let g:signify_sign_delete_first_line = '-'
+        let g:signify_sign_change = '~'
+        let g:signify_sign_show_count = 0
+
+        autocmd User SignifyAutocmds autocmd! signify FocusGained
+      ]]
+    end
+  },
+  -- A simple plugin that helps to end certain structures automatically
+  'tpope/vim-endwise',
+  -- A Git wrapper so awesome, it should be illegal
+  'tpope/vim-fugitive',
+  'tpope/vim-rhubarb',
+  'tpope/vim-repeat',
+  'tpope/vim-surround',
+  'tpope/vim-eunuch'
 }
