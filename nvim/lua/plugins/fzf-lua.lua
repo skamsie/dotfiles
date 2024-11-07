@@ -4,11 +4,11 @@ return {
   config = function()
     local function set_fzf_keymap(key, func)
       vim.keymap.set(
-      'n', '<leader>' .. key,
-      function()
-        require('fzf-lua')[func]()
-      end,
-      { noremap = true, silent = true }
+        'n', '<leader>' .. key,
+        function()
+          require('fzf-lua')[func]()
+        end,
+        { noremap = true, silent = true }
       )
     end
 
@@ -20,10 +20,10 @@ return {
     -- calling `setup` is optional for customization
     local actions = require 'fzf-lua.actions'
     require("fzf-lua").setup(
-      {
-        winopts = {
-          row = 0.5,
-          col = 0.5,
+    {
+      winopts = {
+        row = 0.5,
+        col = 0.5,
           width = 0.8,
           height = 0.8,
           border = 'single',
@@ -46,7 +46,16 @@ return {
           ['header']      = { 'fg', 'Comment' },
           ['gutter']      = '-1',
         },
-        defaults = { file_icons = false },
+        defaults = {
+          file_icons = false,
+          formatter = 'path.dirname_first',
+          hls = {
+            dir_part = 'Normal',
+            file_part = 'Normal',
+            path_linenr = 'Normal',
+            cursorlinenr = 'Normal'
+          }
+        },
         files = {
           winopts = { preview = { delay = 10 } }
         },

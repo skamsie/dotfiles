@@ -8,8 +8,13 @@ vim.cmd("rshada")
 -- d: directory (chdir and e: dirname)
 -- a: action (vim command)
 local elements = {
+  { type = 'e' },
+  { type = 't', txt = 'Recently Used' },
+  { type = 'o', icon = '󰋚 ', key = '1', idx = 1 },
+  { type = 'o', icon = '󰋚 ', key = '2', idx = 2 },
+  { type = 'o', icon = '󰋚 ', key = '3', idx = 3 },
+  { type = 'e' },
   { type = 't', txt = 'Pinned' },
-  { type = 'o', icon = '󰋚 ', key = 'l', idx = 1 },
   { type = 'f', icon = ' ', key = 'a', txt = '~/.alacritty.toml' },
   { type = 'f', icon = ' ', key = 'e', txt = '~/.config/nvim/init.lua' },
   { type = 'd', icon = ' ', key = 'p', txt = '~/.config/nvim/lua/plugins' },
@@ -17,9 +22,8 @@ local elements = {
   { type = 't', txt = 'Actions' },
   { type = 'a', icon = ' ', key = 'o', txt = 'Open current directory', cmd = "execute 'edit ' . getcwd()" },
   { type = 'a', icon = '󰚰 ', key = 's', txt = 'Sync plugins', cmd = 'Lazy sync' },
-  { type = 'a', icon = ' ', key = 'f', txt = 'Find file', cmd = 'FzfLua files' },
   { type = 'a', icon = '󰋚 ', key = 'h', txt = 'History', cmd = 'FzfLua oldfiles' },
-  { type = 'a', icon = '󰋚 ', key = 'c', txt = 'Commands history', cmd = 'FzfLua command_history' },
+--{ type = 'a', icon = '󰋚 ', key = 'c', txt = 'Commands history', cmd = 'FzfLua command_history' },
   { type = 'a', icon = ' ', key = 'q', txt = 'Quit', cmd = 'qa' },
 }
 
@@ -71,34 +75,26 @@ local winter_ascii_art = {
   [[ oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo ]],
 }
 
+local function get_recent_oldfiles()
+  local oldfiles = {}
+  for _, file in ipairs(vim.v.oldfiles) do
+    if #oldfiles >= 10 then
+      break
+    end
+    if vim.fn.filereadable(file) == 1 then
+      table.insert(oldfiles, file)
+    end
+  end
+  return oldfiles
+end
+
 local function get_oldfile(idx)
   local home = vim.fn.expand('$HOME')
-  local oldfiles = vim.v.oldfiles
+  local oldfiles = get_recent_oldfiles()
   local empty = { original = '', shortened = '' }
   if #oldfiles == 0 then return empty end
 
-  -- Check if file exists and is a regular file
-  local function file_exists(filepath)
-    local stat = vim.loop.fs_stat(filepath)
-    return stat and stat.type == 'file' -- Only return true for regular files
-  end
-
-  local last_file
-  local current_idx = idx
-
-  -- Loop to find the next existing file
-  while current_idx <= #oldfiles do
-    last_file = oldfiles[current_idx]
-
-    if file_exists(last_file) then
-      break -- Found a valid file, exit loop
-    else
-      current_idx = current_idx + 1 -- Check the next file
-    end
-  end
-
-  -- If no valid file found, return empty
-  if not last_file or not file_exists(last_file) then return empty end
+  local last_file = oldfiles[idx]
 
   -- Replace the home directory with '~'
   if last_file:find(home, 1, true) then
@@ -205,21 +201,26 @@ return {
   keys = { { '<leader>s', ':Alpha<cr>', desc = 'Trigger dashboard' } },
   event = 'VimEnter',
   lazy = false,
+  enabled = true,
   config = function()
-
-    -- hide statusline when entering then set it again
-    vim.api.nvim_create_autocmd({ "FileType" }, {
-      pattern = "alpha",
+    -- Hide statusline and command line when entering 'alpha' filetype and keep it hidden
+    vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter', 'WinEnter', 'CmdlineLeave' }, {
+      pattern = '*',
       callback = function()
-        vim.opt.laststatus = 0
+        if vim.bo.filetype == 'alpha' then
+          vim.opt.laststatus = 0
+          vim.opt.cmdheight = 0
+        end
       end,
     })
 
-    vim.api.nvim_create_autocmd({ "BufLeave" }, {
-      pattern = "*",
+    -- Restore statusline and command line when leaving 'alpha' filetype
+    vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+      pattern = '*',
       callback = function()
-        if vim.bo.filetype == "alpha" then
+        if vim.bo.filetype == 'alpha' then
           vim.opt.laststatus = 2
+          vim.opt.cmdheight = 1
         end
       end,
     })
@@ -244,7 +245,7 @@ return {
 
     -- center ascii_art vertically by adding empty lines
     local function center_ascii_art(ascii_art, adjust)
-      local size = math.floor(vim.o.lines / 2) - math.ceil(#ascii_art / 2) - (adjust - 2)
+      local size = math.floor(vim.o.lines / 2) - math.ceil(#ascii_art / 2) - (adjust - 3)
       local fill = generate_empty_lines(size)
       return vim.list_extend(fill, ascii_art)
     end
