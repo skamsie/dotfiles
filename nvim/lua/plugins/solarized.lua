@@ -41,6 +41,7 @@ return {
         Property = { fg = colors.base0 },
         Search = { bg = colors.yellow, fg = colors.base02, bold = false },
         SignColumn = { bg = colors.base02 },
+        PmenuSel = { fg = colors.base0, bg = colors.base2 },
 
         -- FzfLua
         FzfLuaBorder = { link = 'Normal' },

@@ -28,13 +28,19 @@ return {
           height = 0.8,
           border = 'single',
           prompt = 'B',
-          backdrop = 100
+          backdrop = 100,
+          preview = {
+             border         = 'border',        -- border|noborder, applies only to
+             wrap           = 'nowrap',        -- wrap|nowrap
+             hidden         = 'nohidden',      -- hidden|nohidden
+             layout         = 'flex',          -- horizontal|vertical|flex
+          },
         },
         fzf_opts = { ['--layout'] = 'default' },
         fzf_colors = {
           ['fg']          = { 'fg', 'CursorLine' },
           ['bg']          = { 'bg', 'Normal' },
-          ['hl']          = { 'fg', 'Comment' },
+          ['hl']          = { 'fg', 'Directory' },
           ['fg+']         = { 'fg', 'Normal' },
           ['bg+']         = { 'bg', 'CursorLine' },
           ['hl+']         = { 'fg', 'Boolean' },
@@ -48,7 +54,7 @@ return {
         },
         defaults = {
           file_icons = false,
-          formatter = 'path.dirname_first',
+          --formatter = 'path.dirname_first',
           hls = {
             dir_part = 'Normal',
             file_part = 'Normal',
@@ -64,7 +70,8 @@ return {
         },
         grep = {
           actions = {
-            ['ctrl-g'] =  actions.toggle_ignore,
+            ['ctrl-g'] = actions.toggle_ignore,
+            ['ctrl-q'] = actions.send_to_qf
           }
         }
       }

@@ -162,7 +162,7 @@ command! -bang -nargs=* Rg
       \ 'rg --column --line-number --no-heading ' .
       \ shellescape(<q-args>), 1, <bang>0 ?
       \ fzf#vim#with_preview(s:fzf_options, 'up:60%')
-      \ : fzf#vim#with_preview(s:fzf_options, 'right:50%:hidden', '?'), <bang>0)
+      \ : fzf#vim#with_preview(s:fzf_options, 'right:50%', '?'), <bang>0)
 
 let g:fzf_layout =
       \ { 'window': { 'width': 1, 'height': 0.5, 'yoffset': 1 } }
@@ -243,7 +243,7 @@ noremap <silent><c-d> :call <SID>scroll('down')<cr>
 " Leader
 map <Space> <leader>
 nmap <leader>; <Plug>(easymotion-s)
-nmap <leader>a :Ag<cr>
+nmap <leader>a :Rg<cr>
 nmap <leader>b :Buffers<cr>
 nmap <leader>d :call AddDebugger("o")<cr>
 nmap <leader>f :Files<cr>

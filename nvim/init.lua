@@ -38,6 +38,7 @@ vim.cmd [[
 
     execute "normal! " . l:h . (a:direction == 'down' ? "\<C-E>" : "\<C-Y>")
   endfunction
+  autocmd filetype netrw noremap <buffer> <c-l> <c-w>>
 ]]
 
 -- Custom scroll keymaps

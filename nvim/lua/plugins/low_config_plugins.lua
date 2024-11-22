@@ -1,6 +1,14 @@
 return {
   { 'ntpeters/vim-better-whitespace' },
   {
+    'mcasper/vim-infer-debugger',
+    config = function()
+      vim.cmd[[
+        nmap <leader>d :call AddDebugger('o')<cr>
+      ]]
+    end
+  },
+  {
     'alvan/vim-closetag',
     config = function()
       vim.g.closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
@@ -53,6 +61,7 @@ return {
   'tpope/vim-endwise',
   -- A Git wrapper so awesome, it should be illegal
   'tpope/vim-fugitive',
+  'tpope/vim-rails',
   'tpope/vim-rhubarb',
   'tpope/vim-repeat',
   'tpope/vim-surround',
