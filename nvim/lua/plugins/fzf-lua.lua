@@ -24,8 +24,8 @@ return {
       winopts = {
         row = 0.5,
         col = 0.5,
-          width = 0.8,
-          height = 0.8,
+          width = 0.9,
+          height = 0.75,
           border = 'single',
           prompt = 'B',
           backdrop = 100,

@@ -57,5 +57,16 @@ vim.api.nvim_set_keymap(
   }
 )
 
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = { "*.css", "*.scss" },
+  callback = function()
+    local current_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
+    local target_dir = vim.fn.expand("~/github/skamsie/casetofoane")
+    if current_dir:find(target_dir, 1, true) == 1 then
+      vim.fn.jobstart("yarn build:css", { detach = true }) -- Run the shell command
+    end
+  end,
+})
+
 require('config.lazy')
 require('config.statusline')

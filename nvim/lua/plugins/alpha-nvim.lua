@@ -36,7 +36,7 @@ local settings = {
   datetime = os.date(' %d-%m-%Y'),
   hl_selection = 'AlphaHeaderLabel',
   hl_header = 'AlphaHeader',
-  hl_normal = 'SpecialKey'
+  hl_normal = 'AlphaShortcut'
 }
 
 local ascii_art = {

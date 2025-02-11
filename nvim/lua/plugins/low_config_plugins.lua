@@ -11,7 +11,7 @@ return {
   {
     'alvan/vim-closetag',
     config = function()
-      vim.g.closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml'
+      vim.g.closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml,*vue'
     end
   },
   {
@@ -65,5 +65,6 @@ return {
   'tpope/vim-rhubarb',
   'tpope/vim-repeat',
   'tpope/vim-surround',
-  'tpope/vim-eunuch'
+  'tpope/vim-eunuch',
+  'AndrewRadev/splitjoin.vim'
 }
