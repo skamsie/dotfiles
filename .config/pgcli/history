@@ -1,0 +1,33 @@
+
+# 2024-09-04 10:36:22.632989
++use lead_distribuition_service_development
+
+# 2024-09-04 10:36:31.730591
++\dt
+
+# 2024-09-04 10:36:46.225069
++exit
+
+# 2024-09-04 10:49:32.574523
++use casetofoane_development
+
+# 2024-09-04 10:49:41.542053
++select * from brands
+
+# 2024-09-04 10:49:47.216974
++exit
+
+# 2024-09-04 11:58:14.101573
++use lead_distribuition_service_test
+
+# 2024-09-04 11:58:21.249308
++\dt
+
+# 2024-09-04 11:58:32.834446
++select * from property_resell_zip_code_configs;
+
+# 2024-09-04 11:58:44.117526
++select * from property_resell_zip_codes;
+
+# 2024-09-04 11:58:52.196282
++exit

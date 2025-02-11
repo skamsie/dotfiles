@@ -1,0 +1,7 @@
+{
+  "suggest.minTriggerInputLength": 2,
+  "suggest.snippetIndicator": ">",
+  "diagnostic.enable": true,
+  "inlayHint.enable": false,
+  "Lua.diagnostics.globals": ["vim"]
+}

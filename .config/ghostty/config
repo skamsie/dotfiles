@@ -1,0 +1,7 @@
+theme = catppuccin-macchiato
+font-family = AkkuratMono Nerd Font
+font-size = 12
+adjust-cell-width = -9%
+adjust-cell-height = +8%
+font-thicken = true
+cursor-style = block
