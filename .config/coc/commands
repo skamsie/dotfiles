@@ -1,5 +1,0 @@
-lua.update
-workspace.workspaceFolders
-workspace.workspaceFolders
-clangd.switchSourceHeader
-document.toggleInlayHint
