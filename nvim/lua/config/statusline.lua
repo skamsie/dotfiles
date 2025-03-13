@@ -91,41 +91,34 @@ function cmp.progress()
   )
 end
 
--- Function to show trailing whitespace
-function cmp.trailing()
-  local result = ''
+-- Trailing whitespace detection
+local trailing_whitespace_position = ''
 
-  if vim.api.nvim_get_mode().mode == 'n' then
+local function update_trailing()
+  if vim.api.nvim_get_mode().mode:sub(1, 1) == 'i' then
+    return -- Do nothing in Insert mode
+  end
+
+  if vim.bo.buftype == '' then -- Avoid running on special buffers
     local space = vim.fn.search([[\s\+$]], 'nwc')
-    result = space ~= 0 and string.format(' ☲ trailing [%s] ', space) or ''
-  end
-
-  return hi_pattern:format('StatusLineTrailing', result)
-end
-
-local function hl_str(hl, str)
-  return "%#" .. hl .. "#" .. str .. "%*"
-end
-
-function cmp.scrollbar()
-  local sbar_chars = { '█', '▇', '▆', '▅', '▄', '▃', '▂', '▁', ' ' }
-
-  local cur_line = vim.api.nvim_win_get_cursor(0)[1]
-  local lines = vim.api.nvim_buf_line_count(0)
-
-  local sbar
-  if cur_line == 1 then
-    sbar = sbar_chars[1]
-  elseif cur_line == lines then
-    sbar = sbar_chars[#sbar_chars]
+    trailing_whitespace_position = space ~= 0 and string.format(' ☲ trailing [%s] ', space) or ''
   else
-    local i = math.floor((cur_line - 2) / (lines - 2) * (#sbar_chars - 2)) + 2
-    sbar = sbar_chars[i]
+    trailing_whitespace_position = ''
   end
 
-  -- Repeat character for scrollbar width
-  return hl_str('Visual', string.rep(sbar, 2))
+  -- Force statusline refresh so the highlight updates immediately
+  vim.cmd("redrawstatus")
 end
+
+function cmp.trailing()
+  return hi_pattern:format('StatusLineTrailing', trailing_whitespace_position)
+end
+
+-- Run update_trailing() only when buffer content changes (but NOT in Insert mode)
+vim.api.nvim_create_autocmd({"BufWritePost", "TextChanged", "BufEnter", "CursorHold"}, {
+  group = vim.api.nvim_create_augroup("TrailingWhitespaceCheck", { clear = true }),
+  callback = update_trailing,
+})
 
 -- Build the statusline
 local statusline_active = {
