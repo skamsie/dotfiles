@@ -10,8 +10,8 @@ return {
   },
   {
     'alvan/vim-closetag',
-    config = function()
-      vim.g.closetag_filenames = '*.html,*.xhtml,*.phtml,*.erb,*.xml,*vue'
+     init = function()
+      vim.g.closetag_filenames = '*.xhtml,*.phtml,*.html.erb,*.xml,*vue'
     end
   },
   {
@@ -43,6 +43,21 @@ return {
         let g:yb_clip_registers = ["x", "y", "z"]
       ]]
     end
+  },
+  {
+    'andymass/vim-matchup',
+    init = function()
+      vim.api.nvim_set_hl(0, "MatchWord", { underline = true, default = true })
+    end,
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+    end
+  },
+  {
+    "nvzone/typr",
+    dependencies = "nvzone/volt",
+    opts = {},
+    cmd = { "Typr", "TyprStats" },
   },
   {
     'mhinz/vim-signify',

@@ -20,7 +20,10 @@ require('lazy').setup({
     { import = 'plugins' }
   },
   install = { colorscheme = { 'solarized' } },
-  checker = { enabled = true },
+  checker = {
+    enabled = true,
+    notify = false,
+  },
   change_detection = { notify = false },
   ui = {
     border = 'single',

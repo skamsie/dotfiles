@@ -101,7 +101,7 @@ local function update_trailing()
 
   if vim.bo.buftype == '' then -- Avoid running on special buffers
     local space = vim.fn.search([[\s\+$]], 'nwc')
-    trailing_whitespace_position = space ~= 0 and string.format(' ☲ trailing [%s] ', space) or ''
+    trailing_whitespace_position = space ~= 0 and string.format(' X trailing [%s] ', space) or ''
   else
     trailing_whitespace_position = ''
   end

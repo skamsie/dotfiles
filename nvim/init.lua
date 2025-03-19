@@ -68,5 +68,41 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
+-- Go --
+-- indentation (use tab and tab is 4 spaces)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.opt.expandtab = false
+    vim.opt.tabstop = 4
+    vim.opt.shiftwidth = 4
+    vim.opt.softtabstop = 4
+    vim.opt.smarttab = true
+  end,
+})
+-- Auto-convert spaces to tabs on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  command = "silent! %retab!"
+})
+
+-- Disable the default startup screen
+vim.opt.shortmess:append("I")
+
+-- Disable default startup screen
+vim.opt.shortmess:append("I")
+
+-- Hide statusline and command line if no files are opened
+if vim.fn.argc() == 0 then
+    vim.opt.laststatus = 0
+    vim.opt.cmdheight = 0
+end
+
+-- Ensure Alpha hides statusline and cmdheight, restoring them on exit
+vim.api.nvim_create_autocmd("User", {
+    pattern = "AlphaReady",
+    command = "set laststatus=0 cmdheight=0 | autocmd BufUnload <buffer> set laststatus=2 cmdheight=1",
+})
+
 require('config.lazy')
 require('config.statusline')

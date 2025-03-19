@@ -36,7 +36,10 @@ return {
              layout         = 'flex',          -- horizontal|vertical|flex
           },
         },
-        fzf_opts = { ['--layout'] = 'default' },
+        fzf_opts = {
+          ['--layout'] = 'default',
+          ['--history'] = vim.fn.stdpath('data') .. '/fzf-lua-history'
+        },
         fzf_colors = {
           ['fg']          = { 'fg', 'CursorLine' },
           ['bg']          = { 'bg', 'Normal' },
@@ -53,6 +56,7 @@ return {
           ['gutter']      = '-1',
         },
         defaults = {
+          winopts = { treesitter = false },
           file_icons = false,
           --formatter = 'path.dirname_first',
           hls = {

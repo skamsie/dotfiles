@@ -2,6 +2,7 @@
 -- :call coc#util#install()
 return {
   'neoclide/coc.nvim',
+  enabled = true,
   config = function()
     vim.g.coc_global_extensions = {
       'coc-clangd',
@@ -9,6 +10,7 @@ return {
       'coc-html',
       'coc-lua',
       'coc-solargraph',
+	  'coc-go',
       'coc-vimlsp',
     }
 
@@ -17,6 +19,7 @@ return {
       nmap <silent> gy <Plug>(coc-type-definition)
       nmap <silent> gi <Plug>(coc-implementation)
       nmap <silent> gr <Plug>(coc-references)
+      nmap <silent> gF <Plug>(coc-fix-current)
     ]]
   end
 }

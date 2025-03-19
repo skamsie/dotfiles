@@ -183,8 +183,6 @@ local function highligh_current_line(alpha)
   -- Hook into alpha.move_cursor and add line highlighting
   local alpha_move_cursor_original = alpha.move_cursor
   function alpha.move_cursor(window)
-    -- Get the current line before moving the cursor
-    local current_line = vim.api.nvim_win_get_cursor(window)[1]
     -- Call the original alpha move cursor function
     alpha_move_cursor_original(window)
     -- After alpha moves the cursor, get the new line number
@@ -203,28 +201,6 @@ return {
   lazy = false,
   enabled = true,
   config = function()
-    -- Hide statusline and command line when entering 'alpha' filetype and keep it hidden
-    vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter', 'WinEnter', 'CmdlineLeave' }, {
-      pattern = '*',
-      callback = function()
-        if vim.bo.filetype == 'alpha' then
-          vim.opt.laststatus = 0
-          vim.opt.cmdheight = 0
-        end
-      end,
-    })
-
-    -- Restore statusline and command line when leaving 'alpha' filetype
-    vim.api.nvim_create_autocmd({ 'BufLeave' }, {
-      pattern = '*',
-      callback = function()
-        if vim.bo.filetype == 'alpha' then
-          vim.opt.laststatus = 2
-          vim.opt.cmdheight = 1
-        end
-      end,
-    })
-
     highligh_current_line(require('alpha'))
 
     local plugins_count = require('lazy').stats().count
