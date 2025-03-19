@@ -10,7 +10,7 @@ return {
       'coc-html',
       'coc-lua',
       'coc-solargraph',
-	  'coc-go',
+      'coc-go',
       'coc-vimlsp',
     }
 

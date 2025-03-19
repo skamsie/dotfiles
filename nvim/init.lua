@@ -69,21 +69,22 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- Go --
--- indentation (use tab and tab is 4 spaces)
+-- Indentation (use tabs and tab is 4 spaces)
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
   callback = function()
-    vim.opt.expandtab = false
-    vim.opt.tabstop = 4
-    vim.opt.shiftwidth = 4
-    vim.opt.softtabstop = 4
-    vim.opt.smarttab = true
+    vim.bo.expandtab = false  -- Use tabs instead of spaces (buffer-local)
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    vim.bo.softtabstop = 4
+    vim.opt.smarttab = true  -- This is a global setting, so keep it under `vim.opt`
   end,
 })
--- Auto-convert spaces to tabs on save
+
+-- Auto-convert spaces to tabs on save (only for Go)
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.go",
-  command = "silent! %retab!"
+  command = "silent! %retab!",
 })
 
 -- Disable the default startup screen
